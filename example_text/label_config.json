@@ -1,0 +1,74 @@
+[
+  {
+    "id": 18,
+    "text": "ORG",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#29B6F6",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 19,
+    "text": "PER",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#E53935",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 20,
+    "text": "BIRTH",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#2E7D32",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 21,
+    "text": "EMAIL",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#D4E157",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 22,
+    "text": "FINANCIAL",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#EC407A",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 23,
+    "text": "ID",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#FBC02D",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 24,
+    "text": "VEHICLE",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#5E35B1",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 25,
+    "text": "TELEPHONE",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#F57F17",
+    "textColor": "#ffffff"
+  },
+  {
+    "id": 26,
+    "text": "LOC",
+    "prefixKey": null,
+    "suffixKey": null,
+    "backgroundColor": "#795548",
+    "textColor": "#ffffff"
+  }
+]
