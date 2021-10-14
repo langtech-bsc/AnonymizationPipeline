@@ -1,8 +1,4 @@
 # Thigs that need to be done still
-#   - Get regex for other sensitive data 
-#       - Credit cards
-#       - CIP Code
-#   - Change the license plate regex so that it doesn't coincide with phone numbers
 #   - Perform the name identification with ROBERTa-base-concat
 
 from functools import reduce
@@ -13,14 +9,17 @@ import argparse
 
 # Regexs used
 REG_EMAIL = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
-REG_TELEPHONE = r"(\+|00)?(34)?((/[^\S\r\n]/|.)?[0-9]{2,3}\.?){3,4}"
+# Change phone regex so that it picks phones from outside Spain (i.e. make the +34 generic)
+#OLD_REG_TELEPHONE = r"(\+|00)?(34)?((/[^\S\r\n]/|.)?[0-9]{2,3}\.?){3,4}"
+REG_TELEPHONE = r"\b(\+|00)?(34)?(( |\.)?[0-9]{2,3}\.?){3,4}\b"
 REG_BANK = r"([A-Z]{2}[0-9]{2} ?)?([0-9]{4} ?){2}[0-9]{2} ?[0-9]{10}"
 REG_BANK2 = r"[A-Z]{4} ?([A-Z]{2} ?){2}[0-9]{3}"
-REG_ID = r"[0-9]{8}[A-Z]{1}|[A-Z]{1}[0-9]{8}|[A-Z]{3}[0-9]{6}"
-#TODO: Fix the license plate regex because it picks the phone numbers and short numbers as well.
-REG_LICENSE_PLATE = r"[A-Z]{0,3}[ -]?[0-9]{4,6}[ -]?[A-Z]{0,3}"
-#TODO: add the regex for the credit cards
-#TODO: add the regex for the CIP code
+#OLD_REG_ID = r"[0-9]{8}[a-zA-Z]{1}|[a-zA-Z]{1}[0-9]{8}|[a-zA-Z]{3}[0-9]{6}"
+REG_ID = r"[0-9]{8}[a-zA-Z]{1}|[a-zA-Z]{1}[0-9]{8}|[a-zA-Z]{3}[0-9]{6}|[a-zA-Z][0-9]{7,8}[a-zA-Z]|[0-9]{2} ?[0-9]{8}"
+#OLD_REG_LICENSE_PLATE: r"[A-Z]{0,3}[ -]?[0-9]{4,6}[ -]?[A-Z]{0,3}"
+REG_LICENSE_PLATE = r"[a-zA-Z] ?-? ?[0-9]{4} ?-? ?[a-zA-Z]{3}"
+REG_CARD = r"\b(?:\d[ -]*?){13,16}\b"
+REG_ZIP = r"\b[0-9]{5}\b"
 
 
 REGEX_LIST = [
@@ -29,7 +28,9 @@ REGEX_LIST = [
     , {'label': "FINANCIAL", 'reg':REG_BANK2}
     , {'label': "TELEPHONE", 'reg':REG_TELEPHONE}
     , {'label': "ID", 'reg':REG_ID}
-    # , {'label': "LICENSE_PLATE", 'reg':REG_LICENSE_PLATE}
+    , {'label': "LICENSE_PLATE", 'reg':REG_LICENSE_PLATE}
+    , {'label': "CARD", 'reg': REG_CARD}
+    , {'label': "ZIP", 'reg':REG_ZIP}
     ]
 
 def tokenRegLabel(line):
@@ -82,9 +83,9 @@ if __name__ == "__main__":
 
 # Testing
 
-# text = ""
-# for reg in REGEX_LIST:
-#     for match in re.finditer(reg['reg'], text):
-#         print(match)
-#         print(reg['label'])
+#text = "Hola Marta, me esta funcionando mal el telefono. Mi numero es 617761843 y me encuentro en Carrer del Cent 65, 08014, Barcelona, Espana. Deberia llamar o quieres que te pase mis datos bancarios? juanCa_selsen@outlook.org es mi corre y luego ES21 2100 2527 33 1234567890 es la cuenta. Buenos día a todos. Hoy vamos a estar trabajando en un proyecto de Integración entre todos. Nos reuniremos en el café Batac en Calle de Aragón 34, a las 17:35. Marc y Joan no se si van a estar leyendo esto o no, pero les dejo un mensaje y sus DNIs aquí por si las dudas. Y3364793V y A7484842Z."
+#for reg in REGEX_LIST:
+    #for match in re.finditer(reg['reg'], text):
+        #print(match)
+        #print(reg['label'])
         
