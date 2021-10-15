@@ -44,6 +44,32 @@ def susbstitudePlainText(line):
         line = re.sub(reg['reg'], f" [{reg['label']}]", line)
     return line
 
+def resolveOverlapping(sorted_tags):
+    index = 0
+    while index < len(sorted_tags) - 1:
+        current_span = sorted_tags[index]
+        next_span = sorted_tags[index+1]
+        if not areOverlapping(current_span, next_span):
+            index += 1
+        else:
+            if next_span['span'][1] < current_span['span'][1]: # The next_span is inside the current_span
+                sorted_tags.pop(index + 1)
+            else: # The 2 spans are intersecting will choose the longest one.
+                # TODO: evaluate if before recurring to the length I should consider merging if they have the same tag.
+                length_current_span = current_span['span'][1] - current_span['span'][0]
+                length_next_span = next_span['span'][1] - next_span['span'][0]
+                if length_current_span < length_next_span:
+                    sorted_tags.pop(index)
+                else:
+                    sorted_tags.pop(index + 1)
+    return sorted_tags
+
+def areOverlapping(span1, span2):
+    start_span1 = span1['span'][0]
+    start_span2 = span2['span'][0]
+    end_span1 = span1['span'][1]
+    end_span2 = span2['span'][1]
+    return (start_span1 <= start_span2 and start_span2 < end_span1) or (start_span2 <= start_span1 and start_span1 < end_span2)
 
 
 def plainToBrat(filePath, outputPath):
@@ -56,8 +82,14 @@ def plainToBrat(filePath, outputPath):
         for match in re.finditer(reg['reg'], text):
             tags.append({'tag': reg['label'], "span": match.span(), "text": match.group()})
     sorted_tags = sorted(tags, key=lambda dic: dic['span']) 
+    #TODO: Need to solve overlapping of entities before puting then in the brat file
+    # The overlapping resolution will be determined by the following rules:
+    # - A span that is inside the scope of another will be suppressed
+    # - If 2 spans are overlapping and have the same tag, they will be merged
+    # - If 2 spans are overlapping and they don't have the same tag, the longest one will be maintained and the other will be suppressed
+    non_overlapping_tags = resolveOverlapping(sorted_tags)
     with open(outputPath, "w") as outputFile:
-        for index, tag in enumerate(sorted_tags):
+        for index, tag in enumerate(non_overlapping_tags):
             outputFile.write(f"T{index}\t{tag['tag']} {tag['span'][0]} {tag['span'][1]}\t{tag['text']}\n")
 
 
@@ -77,15 +109,20 @@ def main():
 
     plainToBrat(filePath=inputFilePath, outputPath=outputFilePath)
 
-if __name__ == "__main__":
-    main()
+#if __name__ == "__main__":
+    #main()
 
 
 # Testing
 
-#text = "Hola Marta, me esta funcionando mal el telefono. Mi numero es 617761843 y me encuentro en Carrer del Cent 65, 08014, Barcelona, Espana. Deberia llamar o quieres que te pase mis datos bancarios? juanCa_selsen@outlook.org es mi corre y luego ES21 2100 2527 33 1234567890 es la cuenta. Buenos día a todos. Hoy vamos a estar trabajando en un proyecto de Integración entre todos. Nos reuniremos en el café Batac en Calle de Aragón 34, a las 17:35. Marc y Joan no se si van a estar leyendo esto o no, pero les dejo un mensaje y sus DNIs aquí por si las dudas. Y3364793V y A7484842Z."
-#for reg in REGEX_LIST:
-    #for match in re.finditer(reg['reg'], text):
-        #print(match)
-        #print(reg['label'])
+text = "Hola Marta, me esta funcionando mal el telefono. Mi numero es 617761843 y me encuentro en Carrer del Cent 65, 08014, Barcelona, Espana. Deberia llamar o quieres que te pase mis datos bancarios? juanCa_selsen@outlook.org es mi corre y luego ES21 2100 2527 33 1234567890 es la cuenta. Buenos día a todos. Hoy vamos a estar trabajando en un proyecto de Integración entre todos. Nos reuniremos en el café Batac en Calle de Aragón 34, a las 17:35. Marc y Joan no se si van a estar leyendo esto o no, pero les dejo un mensaje y sus DNIs aquí por si las dudas. Y3364793V y A7484842Z."
+tags = []
+for reg in REGEX_LIST:
+    for match in re.finditer(reg['reg'], text):
+        tags.append({'tag': reg['label'], "span": match.span(), "text": match.group()})
+sorted_tags = sorted(tags, key=lambda dic: dic['span']) 
+non_overlapping_tags = resolveOverlapping(sorted_tags)
+for match in non_overlapping_tags:
+    print(match)
+    print(match['tag'])
         
