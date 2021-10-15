@@ -82,7 +82,6 @@ def plainToBrat(filePath, outputPath):
         for match in re.finditer(reg['reg'], text):
             tags.append({'tag': reg['label'], "span": match.span(), "text": match.group()})
     sorted_tags = sorted(tags, key=lambda dic: dic['span']) 
-    #TODO: Need to solve overlapping of entities before puting then in the brat file
     # The overlapping resolution will be determined by the following rules:
     # - A span that is inside the scope of another will be suppressed
     # - If 2 spans are overlapping and have the same tag, they will be merged
@@ -125,4 +124,3 @@ if __name__ == "__main__":
 #for match in non_overlapping_tags:
     #print(match)
     #print(match['tag'])
-        
