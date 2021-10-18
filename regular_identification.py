@@ -6,6 +6,7 @@ from os import error, pardir
 from unidecode import unidecode
 import re
 import argparse
+from roberta_name_loc_identification import identifyNames
 
 # Regexs used
 REG_EMAIL = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
@@ -94,6 +95,8 @@ def plainToBrat(filePath, outputPath):
     for reg in REGEX_LIST:
         for match in re.finditer(reg['reg'], text):
             tags.append({'tag': reg['label'], "span": match.span(), "text": match.group()})
+    name_tags = identifyNames(text)
+    tags = tags + name_tags
     sorted_tags = sorted(tags, key=lambda dic: dic['span']) 
     # The overlapping resolution will be determined by the following rules:
     # - A span that is inside the scope of another will be suppressed
@@ -126,8 +129,10 @@ if __name__ == "__main__":
 
 
 # Testing
+# plainToBrat("example_text/example.txt", "example_text/test.txt")
 
-#text = "Hola Marta, me esta funcionando mal el telefono. Mi numero es 617761843 y me encuentro en Carrer del Cent 65, 08014, Barcelona, Espana. Deberia llamar o quieres que te pase mis datos bancarios? juanCa_selsen@outlook.org es mi corre y luego ES21 2100 2527 33 1234567890 es la cuenta. Buenos día a todos. Hoy vamos a estar trabajando en un proyecto de Integración entre todos. Nos reuniremos en el café Batac en Calle de Aragón 34, a las 17:35. Marc y Joan no se si van a estar leyendo esto o no, pero les dejo un mensaje y sus DNIs aquí por si las dudas. Y3364793V y A7484842Z."
+# text = "Hola Marta, me esta funcionando mal el telefono. Mi numero es 617761843 y me encuentro en Carrer del Cent 65, 08014, Barcelona, Espana. Deberia llamar o quieres que te pase mis datos bancarios? juanCa_selsen@outlook.org es mi corre y luego ES21 2100 2527 33 1234567890 es la cuenta. Buenos día a todos. Hoy vamos a estar trabajando en un proyecto de Integración entre todos. Nos reuniremos en el café Batac en Calle de Aragón 34, a las 17:35. Marc y Joan no se si van a estar leyendo esto o no, pero les dejo un mensaje y sus DNIs aquí por si las dudas. Y3364793V y A7484842Z."
+
 #tags = []
 #for reg in REGEX_LIST:
     #for match in re.finditer(reg['reg'], text):

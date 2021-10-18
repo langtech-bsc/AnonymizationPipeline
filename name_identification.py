@@ -68,8 +68,6 @@ def main():
 
     identify_names(inputFilePath, outputFilePath)
 
-# main("output/laia_brat_to_conll.conll", "output/name_identified.conll")
-
 if __name__ == "__main__":
     main()
 
