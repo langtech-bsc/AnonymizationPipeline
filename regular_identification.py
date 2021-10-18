@@ -44,7 +44,13 @@ def susbstitudePlainText(line):
         line = re.sub(reg['reg'], f" [{reg['label']}]", line)
     return line
 
-def resolveOverlapping(sorted_tags):
+def mergeSpans(span1, span2, original_text):
+    combined_span = (min(span1['span'][0], span2['span'][0]), max(span1['span'][1], span2['span'][1]))
+    combined_text = text[combined_span[0]:combined_span[1]]
+    combined = {'tag':span1['tag'], 'span':combined_span, 'text':combined_text}
+    return combined
+
+def resolveOverlapping(sorted_tags, original_text):
     index = 0
     while index < len(sorted_tags) - 1:
         current_span = sorted_tags[index]
@@ -52,16 +58,23 @@ def resolveOverlapping(sorted_tags):
         if not areOverlapping(current_span, next_span):
             index += 1
         else:
+            #TODO: Review if I should delete this case (since it will never happen) because spans are sorted by start and then by end
             if next_span['span'][1] < current_span['span'][1]: # The next_span is inside the current_span
                 sorted_tags.pop(index + 1)
-            else: # The 2 spans are intersecting will choose the longest one.
-                # TODO: evaluate if before recurring to the length I should consider merging if they have the same tag.
-                length_current_span = current_span['span'][1] - current_span['span'][0]
-                length_next_span = next_span['span'][1] - next_span['span'][0]
-                if length_current_span < length_next_span:
-                    sorted_tags.pop(index)
-                else:
+            elif current_span['span'][0] == next_span['span'][0] and current_span['span'][1] < next_span['span'][1]: # The current_span is inside the next_span
+                sorted_tags.pop(index)
+            else: 
+                if current_span['tag'] == next_span['tag']: # The 2 spans are of the same tag and are overlapping, will merge
+                    combined_span = mergeSpans(current_span, next_span, original_text)
+                    sorted_tags[index] = combined_span
                     sorted_tags.pop(index + 1)
+                else: # 2 different spans are intersecting will choose the longest one.
+                    length_current_span = current_span['span'][1] - current_span['span'][0]
+                    length_next_span = next_span['span'][1] - next_span['span'][0]
+                    if length_current_span < length_next_span:
+                        sorted_tags.pop(index)
+                    else:
+                        sorted_tags.pop(index + 1)
     return sorted_tags
 
 def areOverlapping(span1, span2):
@@ -86,7 +99,7 @@ def plainToBrat(filePath, outputPath):
     # - A span that is inside the scope of another will be suppressed
     # - If 2 spans are overlapping and have the same tag, they will be merged
     # - If 2 spans are overlapping and they don't have the same tag, the longest one will be maintained and the other will be suppressed
-    non_overlapping_tags = resolveOverlapping(sorted_tags)
+    non_overlapping_tags = resolveOverlapping(sorted_tags, text)
     with open(outputPath, "w") as outputFile:
         for index, tag in enumerate(non_overlapping_tags):
             outputFile.write(f"T{index}\t{tag['tag']} {tag['span'][0]} {tag['span'][1]}\t{tag['text']}\n")
@@ -120,7 +133,11 @@ if __name__ == "__main__":
     #for match in re.finditer(reg['reg'], text):
         #tags.append({'tag': reg['label'], "span": match.span(), "text": match.group()})
 #sorted_tags = sorted(tags, key=lambda dic: dic['span']) 
-#non_overlapping_tags = resolveOverlapping(sorted_tags)
+#non_overlapping_tags = resolveOverlapping(sorted_tags, text)
 #for match in non_overlapping_tags:
     #print(match)
     #print(match['tag'])
+
+#tags = [{'tag': 'TELEPHONE', 'span': (61, 71), 'text': ' 617761843'}, {'tag': 'TELEPHONE', 'span': (62,76), 'text': '17761843 y me'}]
+
+#print( resolveOverlapping(tags, text))
