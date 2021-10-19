@@ -100,7 +100,8 @@ python3 brat_to_conll.py -i output/tmp/ -o output/text_brat_to_conll.conll
 
 #Run the identification of common names in Spain (from list of names)
 # python3 name_identification.py # Seems that with ROBERTa name identificatio I don't need the regex names anymore
-cp output/text_brat_to_conll.conll output/suggestion.conll
+python3 cleanConllForDoccano.py
+# cp output/text_brat_to_conll.conll output/suggestion.conll
 
 #Copy the suggestion conll file to the directory that contains the original text
 cp output/suggestion.conll $DIRECTORY/suggestion.txt

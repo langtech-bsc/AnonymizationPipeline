@@ -25,7 +25,8 @@ def identify_names(conllFilePath, outputPath, include_spans=False):
     conllInput = []
     with open(conllFilePath, "r") as inputFile:
         conllInput = inputFile.readlines()
-    tags = list(map(detect_name, conllInput))
+    # tags = list(map(detect_name, conllInput))[]
+    tags = list(map(lambda x: "O", conllInput))
     with open(outputPath, "w") as outputFile:
         for index, line in enumerate(conllInput):
             if line == "\n":
