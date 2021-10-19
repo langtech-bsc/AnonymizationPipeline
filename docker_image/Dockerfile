@@ -15,3 +15,5 @@ RUN unzip anon_pipe.zip
 RUN pip install -r requirements.txt
 
 RUN python -m spacy download es_core_news_sm
+
+RUN python -c 'from transformers import AutoTokenizer, AutoModel;tokenizer = AutoTokenizer.from_pretrained("BSC-TeMU/roberta-base-bne-capitel-ner-plus");model = AutoModel.from_pretrained("BSC-TeMU/roberta-base-bne-capitel-ner-plus")'
