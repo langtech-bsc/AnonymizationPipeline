@@ -90,16 +90,17 @@ fi
 
 
 #Run the identification of regular expressions (Telephones, Bank accounts, Identification numbers, E-mail addresses, credit cards, etc)
-python regular_identification.py -f $FILE_PATH
+python3 sensitive_data_identification.py -f $FILE_PATH
 
 #Copy the original text to the folder in which the BRAT result of the previous step is located so that we can transform the BRAT into CONLL
-cp $FILE_PATH output/tmp/regular_identification.txt
+cp $FILE_PATH output/tmp/sensitive_identification.txt
 
 #Transform the result of the regular expression identification from BRAT format to CONLL format with added span information
-python brat_to_conll.py -i output/tmp/ -o output/text_brat_to_conll.conll
+python3 brat_to_conll.py -i output/tmp/ -o output/text_brat_to_conll.conll
 
 #Run the identification of common names in Spain (from list of names)
-python name_identification.py 
+# python3 name_identification.py # Seems that with ROBERTa name identificatio I don't need the regex names anymore
+cp output/text_brat_to_conll.conll output/suggestion.conll
 
 #Copy the suggestion conll file to the directory that contains the original text
 cp output/suggestion.conll $DIRECTORY/suggestion.txt
