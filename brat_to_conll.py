@@ -89,6 +89,9 @@ def get_entities_from_brat(text_filepath, annotation_filepath, verbose=False):
     entities = []
     with codecs.open(annotation_filepath, 'r', 'UTF-8') as f:
         for line in f.read().splitlines():
+            if line == "":
+                print("\nWARNING:Empty line in Brat output Review the text!")
+                continue
             anno = line.split()
             id_anno = anno[0]
             # parse entity

@@ -8,7 +8,7 @@ from transformers import pipeline
 class ROBERTaNameIdentifier :
 
     def __init__(self, model="BSC-TeMU/roberta-base-bne-capitel-ner-plus") -> None:
-        self.pipe = pipeline("ner", model=model, tokenizer=model)
+        self.pipe = pipeline("ner", model=model, tokenizer=model, use_auth_token=True)
 
     def identifyNames(self, text, ):
         
@@ -28,7 +28,7 @@ def BIOConllToJsonl(bioEntities, original_text):
         end = bioEntities[index]['end']
 
         if tag[0] == 'B' :
-            while(index + 1 < len(bioEntities) and (bioEntities[index + 1]['entity'][0] == 'B')):
+            while(index + 1 < len(bioEntities) and (bioEntities[index + 1]['entity'] == tag) and bioEntities[index + 1]['start'] == (end)):
                 end = bioEntities[index + 1]['end']
                 index +=1
         while(index + 1 < len(bioEntities) and (bioEntities[index + 1]['entity'][0] in ['I', 'E'])):
