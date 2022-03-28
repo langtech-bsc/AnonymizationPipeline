@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import List, TypedDict
-from SensitiveIdentifier import SensitiveIdentifier
+from sensitive_identifier import SensitiveIdentifier
 
 from formatters import Registry
 
