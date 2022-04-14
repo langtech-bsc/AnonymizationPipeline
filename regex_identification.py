@@ -25,7 +25,8 @@ class RegexIdentifier(SensitiveIdentifier):
         , {'label': "FINANCIAL", 'reg': sensitive_regex.REG_BANK2, "rank":1}
         , {'label': "TELEPHONE", 'reg': sensitive_regex.REG_TELEPHONE, "rank":1}
         , {'label': "ID", 'reg': sensitive_regex.REG_ID, "rank":2}
-        , {'label': "LICENSE_PLATE", 'reg': sensitive_regex.REG_LICENSE_PLATE, "rank":3}
+        , {'label': "VEHICLE", 'reg': sensitive_regex.REG_LICENSE_PLATE, "rank":3}
+        , {'label': "FINANCIAL", 'reg': sensitive_regex.REG_BANK + "|" + sensitive_regex.REG_BANK2, "rank":3}
         , {'label': "CARD", 'reg': sensitive_regex.REG_CARD, "rank":1}
         , {'label': "ZIP", 'reg': sensitive_regex.REG_ZIP, "rank":3}
     ]
