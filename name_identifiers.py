@@ -59,6 +59,8 @@ class SpacyIdentifier(SensitiveIdentifier):
             , "surname" : "PER"
             , "surname2" : "PER"
             , "address" : "LOC"
+            , "PER" : "PER"
+            , "LOC" : "LOC"
             }
 
     def identify_sensitive(self, registry: Registry) -> None:
