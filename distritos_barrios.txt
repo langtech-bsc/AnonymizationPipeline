@@ -1,0 +1,86 @@
+Ciutat Vella 
+Raval  
+Gòtic  
+Barceloneta  
+Sant Pere
+Santa Caterina i la Ribera  
+Eixample 
+Fort Pienc  
+Sagrada Família  
+Dreta de l'Eixample  
+l'Antiga Esquerra de l'Eixample  
+Nova Esquerra de l'Eixample  
+Sant Antoni  
+Sants-Montjuïc 
+Poble Sec  
+Marina del Prat Vermell  
+Marina de Port  
+Font de la Guatlla  
+Hostafrancs  
+Bordeta  
+Sants-Badal  
+Sants  
+Les Corts 
+Corts  
+Maternitat i Sant Ramon  
+Pedralbes  
+Sarrià-Sant Gervasi 
+Vallvidrera
+Tibidabo i les Planes  
+Sarrià  
+les Tres Torres  
+Sant Gervasi-Bonanova  
+Sant Gervasi-Galvany  
+Putget i Farró  
+Gràcia 
+Vallcarca i els Penitents  
+Coll  
+la Salut  
+Vila de Gràcia  
+Camp d'en Grassot i Gràcia Nova  
+Horta-Guinardó 
+Baix Guinardó  
+Can Baró  
+Guinardó  
+Font d'en Fargues  
+Carmel  
+Teixonera  
+Sant Genís dels Agudells  
+Montbau  
+Vall d'Hebron  
+Clota  
+Horta  
+Nou Barris 
+Vilapicina i la Torre Llobeta  
+Porta  
+Turó de la Peira  
+Can Peguera  
+Guineueta  
+Canyelles  
+les Roquetes  
+Verdun  
+Prosperitat  
+Trinitat Nova  
+Torre Baró  
+Ciutat Meridiana  
+Vallbona  
+Sant Andreu 
+Trinitat Vella  
+Baró de Viver  
+Bon Pastor  
+Sant Andreu  
+Sagrera  
+Congrés i els Indians  
+Navas  
+Sant Martí 
+Camp de l'Arpa del Clot  
+Clot  
+Parc i la Llacuna del Poblenou  
+Vila Olímpica del Poblenou  
+Poblenou  
+Diagonal Mar i el Front Marítim del Poblenou  
+Besòs i el Maresme  
+Provençals del Poblenou  
+Sant Martí de Provençals  
+Verneda i la Pau        
+Zona Franca
