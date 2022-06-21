@@ -23,8 +23,8 @@ class RegexIdentifier(SensitiveIdentifier):
         {'label': "EMAIL", 'reg': sensitive_regex.REG_EMAIL, "rank":1}
         , {'label': "FINANCIAL", 'reg': sensitive_regex.REG_BANK, "rank":1}
         , {'label': "FINANCIAL", 'reg': sensitive_regex.REG_BANK2, "rank":1}
+        , {'label': "ID", 'reg': sensitive_regex.NEW_REG_ID, "rank":2}
         , {'label': "TELEPHONE", 'reg': sensitive_regex.REG_TELEPHONE, "rank":1}
-        , {'label': "ID", 'reg': sensitive_regex.REG_ID, "rank":2}
         , {'label': "VEHICLE", 'reg': sensitive_regex.REG_LICENSE_PLATE, "rank":3}
         , {'label': "FINANCIAL", 'reg': sensitive_regex.REG_BANK + "|" + sensitive_regex.REG_BANK2, "rank":3}
         , {'label': "CARD", 'reg': sensitive_regex.REG_CARD, "rank":1}

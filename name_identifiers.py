@@ -68,4 +68,4 @@ class SpacyIdentifier(SensitiveIdentifier):
         doc = self._pipe(text)
         for ent in doc.ents:
             print(ent.text, ent.start_char, ent.end_char, ent.label_)
-            registry.add_span({"start": ent.start_char, "end": ent.end_char, "label": self.label_map[ent.label_] if ent.label_ in self.label_map else "OTHER", "rank": 0})
+            registry.add_span({"start": ent.start_char, "end": ent.end_char, "label": self.label_map[ent.label_] if ent.label_ in self.label_map else ent.label_, "rank": 0})
