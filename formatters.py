@@ -145,6 +145,7 @@ class Formatter(ABC):
 class ProdigyFormatter(Formatter):
     def __init__(self, input_file) -> None:
         super().__init__(input_file)
+        self._anonnymizer = anonymize.AllAnonym()
     
     @classmethod
     def registryFactory(cls, line: str) -> Registry:
@@ -154,7 +155,7 @@ class ProdigyFormatter(Formatter):
         for reg in self.registries:
             if reg.index == index:
                 text = reg.text
-                span, new_text = anonymize.anonymizeSpans(reg.spans,text)
+                span, new_text = anonymize.anonymizeSpans(self._anonnymizer, reg.spans,text)
                 reg.text = new_text
 
 
