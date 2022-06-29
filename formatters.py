@@ -99,7 +99,7 @@ class ProdigyRegistry(Registry):
     @classmethod
     def factory(cls, r: dict) -> Registry:
         spans = list(map(lambda s: Span(start=s["start"],end=s["end"],label=s["label"], rank=s["rank"] if "rank" in s else 0), r["spans"]))
-        return cls(r['meta']['id'], r['text'], spans, r['meta'])
+        return cls(r['meta']['FITXA_ID'], r['text'], spans, r['meta'])
     
 
 class DocannoRegistry(Registry):
@@ -154,7 +154,7 @@ class ProdigyFormatter(Formatter):
         for reg in self.registries:
             if reg.index == index:
                 text = reg.text
-                new_text = anonymize.anonymizeSpans(reg.spans,text)
+                span, new_text = anonymize.anonymizeSpans(reg.spans,text)
                 reg.text = new_text
 
 

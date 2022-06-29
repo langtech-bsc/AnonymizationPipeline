@@ -6,7 +6,7 @@ import pandas as pd
 
 import string
 import random
-from typing import List
+from typing import List, Tuple
 
 from meta import Span
 
@@ -17,12 +17,14 @@ numbers : str = "0123456789"
 
 
 
-def anonymizeSpans(spans : List[Span], text : str) -> str :
+def anonymizeSpans(spans : List[Span], text : str) -> Tuple[List[Span],str] :
+    new_spans = []
     for span in spans:
-        text = anonymize(span, text)
-    return text
+        new_span, text = anonymize(span, text)
+        new_spans.append(new_span)
+    return (new_spans,text)
 
-def anonymize(span : Span, text : str) -> str: 
+def anonymize(span : Span, text : str) -> Tuple[Span, str]: 
     start : int = span['start']
     end : int = span['end']
     new_text : List[str] = [] 
@@ -36,7 +38,7 @@ def anonymize(span : Span, text : str) -> str:
                 new_text.append(random.choice(lowers))
         else: 
             new_text.append(char)
-    return text[:start] + "".join(new_text) + text[end:]
+    return (span,text[:start] + "".join(new_text) + text[end:])
 
 class Anonymizer(ABC):
 
@@ -125,7 +127,7 @@ class LOCAnonymizer(Anonymizer):
         streets = self._nomenclator.loc[self._nomenclator['TIPUS_VIA'].isin(["carrer", "via", "carreró", "avinguda", "passeig"])]
         parks = self._nomenclator.loc[self._nomenclator["TIPUS_VIA"].isin(["jardí", "placeta", "plaça", "jardins", "parc"])]
         if any(char.isdigit() for char in lower): # Full street address
-            selection = streets.sample().iloc[0]
+            selection = streets.sample(1).iloc[0]
             if any(x in lower for x in ["carrer", "calle", "vía", "via", "carrero", "carreró"]): # With descriptor                 
                 address = f"{selection['TIPUS_VIA']} {selection['PARTICULES']} {selection['NOM']} {random.randint(1,100)}"
                 # return "Carrer de la Torre d'En Damians 12"
@@ -134,9 +136,9 @@ class LOCAnonymizer(Anonymizer):
             return address
         else: 
             if " amb " in lower or " i " in lower or " cantonada " in lower: # intersection
-                selection = streets.sample(2)
-                street1 = selection.iloc[0]
-                street2 = selection.iloc[1]
+                two_street_slection = streets.sample(2)
+                street1 = two_street_slection.iloc[0]
+                street2 = two_street_slection.iloc[1]
                 address1 = f"{street1['TIPUS_VIA']} {street1['PARTICULES']} {street1['NOM']}"
                 address2 = f"{street2['TIPUS_VIA']} {street2['PARTICULES']} {street2['NOM']}"
                 address = address1 + f" {random.choice(['amb', 'i', 'con', 'y', 'cantonada'])} " + address2
@@ -144,11 +146,11 @@ class LOCAnonymizer(Anonymizer):
             elif any(x in lower for x in ["districte", "district", "distrito", "barrio", "barri", "zona"]):
                 return random.choice(self._barrios)
             elif any(x in lower for x in ["park", "parque", "jardín", "parc", "plaça"]): # Parque o jardín
-                selection = parks.sample().iloc[0]
+                selection = parks.sample(1).iloc[0]
                 address = f"{selection['TIPUS_VIA']} {selection['PARTICULES']} {selection['NOM']}"
                 return address
             else: # Single street
-                selection = streets.sample().iloc[0]
+                selection = streets.sample(1).iloc[0]
                 address = f"{selection['TIPUS_VIA']} {selection['PARTICULES']} {selection['NOM']}"
                 return address
 
