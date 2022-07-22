@@ -5,9 +5,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 import json
 from typing import List
-import anonymize
+from anonymize import Anonymizer, anonymizeSpans
 from meta import Span
-import bisect
 
 
 
@@ -19,8 +18,6 @@ class Registry(ABC):
         self._text = text
         self._spans : List[Span] = []
         for span in spans:
-            # if span["label"] =="TELEPHONE":
-            #     print("here")
             self.add_span(span)
         self._meta = meta
 
@@ -45,6 +42,9 @@ class Registry(ABC):
     def spans(self) -> List[Span]:
         return self._spans
 
+    @spans.setter
+    def spans(self, spans : List[Span]) -> None:
+        self._spans = spans
 
     @property
     def meta(self) -> dict:
@@ -100,6 +100,19 @@ class ProdigyRegistry(Registry):
     def factory(cls, r: dict) -> Registry:
         spans = list(map(lambda s: Span(start=s["start"],end=s["end"],label=s["label"], rank=s["rank"] if "rank" in s else 0), r["spans"]))
         return cls(r['meta']['FITXA_ID'], r['text'], spans, r['meta'])
+
+class PlainRegistry(Registry):
+    def __init__(self, index: str, text: str, spans: List[Span], meta: dict) -> None:
+        super().__init__(index, text, spans, meta)
+    
+    def toString(self) -> str:
+        return json.dumps({"text": self.text, "spans": self.spans, "meta": self.meta}) + "\n"
+
+    @classmethod
+    def factory(cls, r: dict) -> Registry:
+        text = r['text']
+        index = r['index']
+        return cls(index, text, [], {})
     
 
 class DocannoRegistry(Registry):
@@ -133,9 +146,12 @@ class Formatter(ABC):
                 reg = self.registryFactory(line)
                 self.registries.append(reg)
         return 
-    @abstractmethod
-    def substitute_text(self, index : str) -> None:
-        pass
+    
+    def anonymize_registries(self, anonymizer : Anonymizer):
+        for registry in self.registries:
+            new_spans, new_text = anonymizeSpans(anonymizer, registry.spans, registry.text)
+            registry.text = new_text
+            registry.spans = new_spans
 
     def save(self, output_path) -> None:
         with open(output_path, "w") as o:
@@ -145,19 +161,24 @@ class Formatter(ABC):
 class ProdigyFormatter(Formatter):
     def __init__(self, input_file) -> None:
         super().__init__(input_file)
-        self._anonnymizer = anonymize.AllAnonym()
     
     @classmethod
     def registryFactory(cls, line: str) -> Registry:
         return ProdigyRegistry.factory(json.loads(line))
     
-    def substitute_text(self, index: str) -> None:
-        for reg in self.registries:
-            if reg.index == index:
-                text = reg.text
-                span, new_text = anonymize.anonymizeSpans(self._anonnymizer, reg.spans,text)
-                reg.text = new_text
 
+class PlainTextFormatter(Formatter):
+    index = 0
+    def __init__(self, input_file: str) -> None:
+        super().__init__(input_file)
+        self.index = 0
+
+    @classmethod
+    def registryFactory(cls, line: str) -> Registry:
+        cls.index = cls.index + 1
+        return PlainRegistry.factory({"index":cls.index, "text":line})
+
+    
 
 class DocannoFormatter:
     #TODO: Program
