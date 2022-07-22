@@ -22,9 +22,9 @@ def anonymizeSpans(anonymizer : Anonymizer, spans: List[Span], text: str) -> Tup
     offset = 0
     for span in spans:
         span["start"]+= offset
-        span["end"]+=offset
+        span["end"]+= offset
         new_span, new_text = anonymizer.anonymize(span, text)
-        text = text[:span["start"]] + new_text + text[span["end"]:]
+        text = new_text
         offset += new_span["end"] - span["end"]
         new_spans.append(new_span)
     return (new_spans, text)
@@ -57,7 +57,7 @@ class Anonymizer(ABC):
         pass
 
 
-class SimpleAnonym(Anonymizer):
+class RandomAnonym(Anonymizer):
 
     def __init__(self) -> None:
         super().__init__()
@@ -77,6 +77,20 @@ class SimpleAnonym(Anonymizer):
             else:
                 new_text.append(char)
         return (span.copy(), text[:start] + "".join(new_text) + text[end:])
+
+class LabelAnonym(Anonymizer):
+
+    def __init__(self) -> None:
+        super().__init__()
+
+    def anonymize(self, span: Span, text: str) -> Tuple[Span, str]:
+        start: int = span['start']
+        end: int = span['end']
+        label = span["label"]
+        new_text: str = f"<{label}>"
+        new_span = span.copy()
+        new_span["end"] = new_span["start"] + len(new_text)
+        return (new_span, text[:start] + new_text + text[end:])
 
 
 class AllAnonym(Anonymizer):
@@ -117,8 +131,6 @@ class AllAnonym(Anonymizer):
         }
 
     def anonymize(self, span: Span, text: str) -> Tuple[Span, str]:
-        start: int = span['start']
-        end: int = span['end']
         old_text : str = text[span["start"]:span["end"]]
         new_text = self._replaceDefault(old_text) if span["label"] not in self.replace_dict else self.replace_dict[span["label"]](old_text)
         new_span = span.copy()
