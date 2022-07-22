@@ -48,7 +48,7 @@ def BIOConllToJsonl(bioEntities, original_text):
     return entities
 
 class SpacyIdentifier(SensitiveIdentifier):
-    def __init__(self, path_to_model="xitxat_anonym/model_xit_xat_PER_LOC") -> None:
+    def __init__(self, path_to_model : str) -> None:
         super().__init__()
         self._pipe = spacy.load(path_to_model)
     
@@ -67,5 +67,5 @@ class SpacyIdentifier(SensitiveIdentifier):
         text = registry.text
         doc = self._pipe(text)
         for ent in doc.ents:
-            print(ent.text, ent.start_char, ent.end_char, ent.label_)
+            # print(ent.text, ent.start_char, ent.end_char, ent.label_)
             registry.add_span({"start": ent.start_char, "end": ent.end_char, "label": self.label_map[ent.label_] if ent.label_ in self.label_map else ent.label_, "rank": 0})
