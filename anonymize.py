@@ -1,7 +1,8 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from curses.ascii import isupper
 import pandas as pd
+import faker
+import babel.dates
 
 # This file will contain the scripts for anonymizing spans
 
@@ -156,7 +157,7 @@ class AllAnonym(Anonymizer):
         new_text = self._replaceDefault(old_text) if span["label"] not in self.replace_dict else self.replace_dict[span["label"]](old_text)
         new_span = span.copy()
         new_span["end"] = new_span["start"] + len(new_text)
-        return (new_span, new_text)
+        return (new_span, text[:span["start"]] + new_text + text[span["end"]:])
 
     def _replacePER(self, text: str) -> str:
         subwords = text.split()
@@ -180,7 +181,7 @@ class AllAnonym(Anonymizer):
     def _replaceLOC(self, text: str) -> str:
         # TODO: Detect if it is a city (Barcelona, L'Hospitalet de Lobregat, Sabadell, etc) to replace it with a city names
         lower = text.lower()
-        intersections = ["amd", "i", "cantonada", "con", "y"]
+        intersections = [" amb ", " i ", "cantonada", " con ", " y "]
         
         if any(char.isdigit() for char in lower):  # Full street address
             selection = self.streets.sample(1).iloc[0]
@@ -219,16 +220,32 @@ class AllAnonym(Anonymizer):
         return self._replaceDefault(text)
 
     def _replaceZIP(self, text: str) -> str:
-        return self._replaceDefault(text)
+        if text[:2].isnumeric(): # Local zip, we want to keep the first 2 digits
+            return text[:2] + self._replaceDefault(text[2:])
+        else:
+            return self._replaceDefault(text)
 
     def _replaceID(self, text: str) -> str:
         return self._replaceDefault(text)
 
     def _replaceDATE(self, text: str) -> str:
-        return self._replaceDefault(text)
+        fake = faker.Faker()
+        date = fake.date_time_between(start_date="-2y", end_date="now")
+        if not any(map(lambda c: c.isalpha(), text)): # contracted numerical date format
+            return date.strftime("%d/%m/%Y")
+        elif any(map(lambda word: word in text.lower(), ["'", "gener", "febrer ", "març", "maig", "juny", "juliol", "agost ", "setembre", "novembre", "desembre"])) : # catalan date
+            return babel.dates.format_date(date, "long", locale="ca")
+        else: 
+            return babel.dates.format_date(date, "long", locale="es")
 
     def _replaceFINANCIAL(self, text: str) -> str:
-        return self._replaceDefault(text)
+        if text[0].isalpha(): # BANK identifier
+            starting = text[:2]
+            remaining = text[2:]
+            replacement = _random_replace(remaining)
+            return starting + replacement
+        else: 
+            return self._replaceDefault(text)
 
     def _replaceCARD(self, text: str) -> str:
         return self._replaceDefault(text)
