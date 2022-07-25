@@ -170,7 +170,7 @@ class AllAnonym(Anonymizer):
         return  new_text
 
     def _fix_particule(self, selection) -> str:
-        if selection['PARTICULES']:
+        if type(selection['PARTICULES']) == str: # Check because some entries in nomenclator don't have particle
             if "'" in selection["PARTICULES"]:
                 return f"{selection['TIPUS_VIA']} {selection['PARTICULES']}{selection['NOM']}"
             else: 
@@ -217,7 +217,7 @@ class AllAnonym(Anonymizer):
             return address
 
     def _replaceTELEPHONE(self, text: str) -> str:
-        return self._replaceDefault(text)
+        return text[:1] + self._replaceDefault(text[1:])
 
     def _replaceZIP(self, text: str) -> str:
         if text[:2].isnumeric(): # Local zip, we want to keep the first 2 digits
