@@ -115,8 +115,8 @@ class AllAnonym(Anonymizer):
         # TODO: Put all files in a gazeteer dictionary
         # Get name files
         # TODO: Change for DataFrame
-        names_path = "names/names_no_rep.txt"
-        surnames_path = "names/surnames.txt"
+        names_path = "data/names/names_no_rep.txt"
+        surnames_path = "data/names/surnames.txt"
         self._name_list = []
         self._surname_list = []
         with open(names_path, "r") as f:
@@ -127,8 +127,8 @@ class AllAnonym(Anonymizer):
                 self._surname_list.append(line.strip())
 
         # Get location files
-        nomenclator_path = "nomenclator.csv"
-        barrios_path = "distritos_barrios.txt"
+        nomenclator_path = "data/nomenclator.csv"
+        barrios_path = "data/distritos_barrios.txt"
         self._nomenclator = pd.read_csv(nomenclator_path)
         with open(barrios_path, "r") as f:
             self._barrios = [x.strip() for x in f.read().splitlines()]

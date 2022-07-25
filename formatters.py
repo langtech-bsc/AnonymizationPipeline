@@ -94,7 +94,7 @@ class ProdigyRegistry(Registry):
         super().__init__(index, text, spans, meta)
     
     def toString(self) -> str:
-        return json.dumps({"text": self.text, "spans": self.spans, "meta": self.meta}) + "\n"
+        return json.dumps({"text": self.text, "spans": self.spans, "meta": self.meta}, ensure_ascii=False) + "\n"
     
     @classmethod
     def factory(cls, r: dict) -> Registry:
@@ -106,7 +106,7 @@ class PlainRegistry(Registry):
         super().__init__(index, text, spans, meta)
     
     def toString(self) -> str:
-        return json.dumps({"text": self.text, "spans": self.spans, "meta": self.meta}) + "\n"
+        return json.dumps({"text": self.text, "spans": self.spans, "meta": self.meta}, ensure_ascii=False) + "\n"
 
     @classmethod
     def factory(cls, r: dict) -> Registry:
@@ -121,7 +121,7 @@ class DocannoRegistry(Registry):
     
     def toString(self) -> str:
         spans = list(map(lambda x: (x['start'], x['end']), self.spans))
-        return json.dumps({"text": self.text, "spans": spans}) + "\n"
+        return json.dumps({"text": self.text, "spans": spans}, ensure_ascii=False) + "\n"
 
     @classmethod
     def factory(cls, r: dict) -> DocannoRegistry:
