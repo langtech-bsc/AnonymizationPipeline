@@ -1,5 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
+from curses.ascii import isupper
 import pandas as pd
 
 # This file will contain the scripts for anonymizing spans
@@ -29,12 +30,27 @@ def anonymizeSpans(anonymizer : Anonymizer, spans: List[Span], text: str) -> Tup
         new_spans.append(new_span)
     return (new_spans, text)
 
+#TODO: Delete!
+# def anonymize(span: Span, text: str) -> Tuple[Span, str]:
+#     start: int = span['start']
+#     end: int = span['end']
+#     new_text: List[str] = []
+#     for char in text[start:end]:
+#         if char.isnumeric():
+#             new_text.append(random.choice(numbers))
+#         elif char.isalpha():
+#             if char.isupper():
+#                 new_text.append(random.choice(uppers))
+#             else:
+#                 new_text.append(random.choice(lowers))
+#         else:
+#             new_text.append(char)
+#     return (span.copy(), text[:start] + "".join(new_text) + text[end:])
 
-def anonymize(span: Span, text: str) -> Tuple[Span, str]:
-    start: int = span['start']
-    end: int = span['end']
+
+def _random_replace(text : str) -> str:
     new_text: List[str] = []
-    for char in text[start:end]:
+    for char in text:
         if char.isnumeric():
             new_text.append(random.choice(numbers))
         elif char.isalpha():
@@ -44,8 +60,7 @@ def anonymize(span: Span, text: str) -> Tuple[Span, str]:
                 new_text.append(random.choice(lowers))
         else:
             new_text.append(char)
-    return (span.copy(), text[:start] + "".join(new_text) + text[end:])
-
+    return "".join(new_text)
 
 class Anonymizer(ABC):
 
@@ -117,6 +132,12 @@ class AllAnonym(Anonymizer):
         with open(barrios_path, "r") as f:
             self._barrios = [x.strip() for x in f.read().splitlines()]
 
+        # Select specific locations
+        self.streets = self._nomenclator.loc[self._nomenclator['TIPUS_VIA'].isin(
+            ["carrer", "via", "carreró", "avinguda", "passeig"])]
+        self.parks = self._nomenclator.loc[self._nomenclator["TIPUS_VIA"].isin(
+            ["jardí", "placeta", "plaça", "jardins", "parc"])]
+
         self.replace_dict: Dict[str, Callable[[str], str]] = {
             "PER": self._replacePER,
             "LOC": self._replaceLOC,
@@ -147,52 +168,52 @@ class AllAnonym(Anonymizer):
             new_text = f"{name} {surname}"
         return  new_text
 
+    def _fix_particule(self, selection) -> str:
+        if selection['PARTICULES']:
+            if "'" in selection["PARTICULES"]:
+                return f"{selection['TIPUS_VIA']} {selection['PARTICULES']}{selection['NOM']}"
+            else: 
+                return f"{selection['TIPUS_VIA']} {selection['PARTICULES']} {selection['NOM']}"
+        else: 
+            return f"{selection['TIPUS_VIA']} {selection['NOM']}"
+
     def _replaceLOC(self, text: str) -> str:
-        # TODO: Take into account upper cases (all upper, single upper after descriptor, all lower)
-        # TODO: Make the conjunction word be the same in the output.
-        # TODO: Remove space between PARTICULES and NOM if the PARTICULES ends with '
         # TODO: Detect if it is a city (Barcelona, L'Hospitalet de Lobregat, Sabadell, etc) to replace it with a city names
         lower = text.lower()
-        streets = self._nomenclator.loc[self._nomenclator['TIPUS_VIA'].isin(
-            ["carrer", "via", "carreró", "avinguda", "passeig"])]
-        parks = self._nomenclator.loc[self._nomenclator["TIPUS_VIA"].isin(
-            ["jardí", "placeta", "plaça", "jardins", "parc"])]
+        intersections = ["amd", "i", "cantonada", "con", "y"]
+        
         if any(char.isdigit() for char in lower):  # Full street address
-            selection = streets.sample(1).iloc[0]
+            selection = self.streets.sample(1).iloc[0]
             # With descriptor
             if any(x in lower for x in ["carrer", "calle", "vía", "via", "carrero", "carreró"]):
-                address = f"{selection['TIPUS_VIA']} {selection['PARTICULES']} {selection['NOM']} {random.randint(1,100)}"
+                address = f"{self._fix_particule(selection)} {random.randint(1,100)}"
             else:
                 address = f"{selection['NOM']} {random.randint(1,100)}"
-            return address
         else:
-            if " amb " in lower or " i " in lower or " cantonada " in lower:  # intersection
-                two_street_slection = streets.sample(2)
+            intersecting_selection = [inter for inter in intersections if inter in lower]
+            if len(intersecting_selection) > 0:  # intersection
+                two_street_slection = self.streets.sample(2)
                 street1 = two_street_slection.iloc[0]
                 street2 = two_street_slection.iloc[1]
-                address1 = f"{street1['TIPUS_VIA']} {street1['PARTICULES']} {street1['NOM']}"
-                address2 = f"{street2['TIPUS_VIA']} {street2['PARTICULES']} {street2['NOM']}"
+                address1 = f"{self._fix_particule(street1)}"
+                address2 = f"{self._fix_particule(street2)}"
                 address = address1 + \
-                    f" {random.choice(['amb', 'i', 'con', 'y', 'cantonada'])} " + address2
-                return address
-            elif any(x in lower for x in ["districte", "district", "distrito", "barrio", "barri", "zona"]):
-                return random.choice(self._barrios)
-            # Parque o jardín
-            elif any(x in lower for x in ["park", "parque", "jardín", "parc", "plaça"]):
-                selection = parks.sample(1).iloc[0]
-                address = f"{selection['TIPUS_VIA']} {selection['PARTICULES']} {selection['NOM']}"
-                return address
+                    f" {random.choice(intersecting_selection)} " + address2
+            elif any(x in lower for x in ["districte", "district", "distrito", "barrio", "barri", "zona"]): # Barrio
+                address = random.choice(self._barrios)            
+            elif any(x in lower for x in ["park", "parque", "jardín", "parc", "plaça"]): # Parque o jardín
+                selection = self.parks.sample(1).iloc[0]
+                address = f"{self._fix_particule(selection)}"
             else:  # Single street
-                selection = streets.sample(1).iloc[0]
-                address = f"{selection['TIPUS_VIA']} {selection['PARTICULES']} {selection['NOM']}"
-                return address
-
-    # Categories
-    # - Full address (street and number)
-    # - Only street
-    # - 2 Streets (amb, i or cantonada)
-    ## - Neighborhood (district, districte, districto, barrio, barri, zona)
-    ## - Park (park, parque, jardín, parc, plaça)
+                selection = self.streets.sample(1).iloc[0]
+                address = f"{self._fix_particule(selection)}"
+            
+        if text.isupper():
+            return address.upper()
+        elif text.islower():
+            return address.lower()
+        else:
+            return address
 
     def _replaceTELEPHONE(self, text: str) -> str:
         return self._replaceDefault(text)
@@ -216,7 +237,7 @@ class AllAnonym(Anonymizer):
         return self._replaceDefault(text)
 
     def _replaceDefault(self, text: str) -> str:
-        pass
+        return _random_replace(text)
 
     def _replaceDelete(self, text: str) -> str:
         return ""
