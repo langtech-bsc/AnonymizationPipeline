@@ -7,6 +7,7 @@ import json
 from typing import List
 from anonymize import Anonymizer, anonymizeSpans
 from meta import Span
+from tqdm import tqdm
 
 
 
@@ -99,7 +100,7 @@ class ProdigyRegistry(Registry):
     @classmethod
     def factory(cls, r: dict) -> Registry:
         spans = list(map(lambda s: Span(start=s["start"],end=s["end"],label=s["label"], rank=s["rank"] if "rank" in s else 0), r["spans"]))
-        return cls(r['meta']['FITXA_ID'], r['text'], spans, r['meta'])
+        return cls(r['meta']['ID'], r['text'], spans, r['meta'])
 
 class PlainRegistry(Registry):
     def __init__(self, index: str, text: str, spans: List[Span], meta: dict) -> None:
@@ -142,20 +143,20 @@ class Formatter(ABC):
     def read_file(self, input_path) -> None:
         #TODO: Think if the formatter should read all lines or process them in batches (low memory resources)
         with open(input_path, "r") as f:
-            for line in f:
+            for line in tqdm(f, "Ingesting registries", total=sum(1 for line in open(input_path, "r"))):
                 reg = self.registryFactory(line)
                 self.registries.append(reg)
         return 
     
     def anonymize_registries(self, anonymizer : Anonymizer):
-        for registry in self.registries:
+        for registry in tqdm(self.registries, "Anonymizing Registries", total=len(self.registries)):
             new_spans, new_text = anonymizeSpans(anonymizer, registry.spans, registry.text)
             registry.text = new_text
             registry.spans = new_spans
 
     def save(self, output_path) -> None:
         with open(output_path, "w") as o:
-            for reg in self.registries:
+            for reg in tqdm(self.registries, "Saving Registries", total=len(self.registries)):
                 o.write(reg.toString())
 
 class ProdigyFormatter(Formatter):

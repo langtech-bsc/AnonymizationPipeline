@@ -3,6 +3,7 @@ import formatters
 import name_identifiers
 import regex_identification
 import argparse
+from tqdm import tqdm
 
 def main():
     parser = argparse.ArgumentParser()
@@ -35,22 +36,18 @@ def main():
         ner_model = name_identifiers.RoBERTaNameIdentifier(model_path)
     print("Finished loading model")
     
-    print("Ingesting data")
     if input_format == "plain":
         ingester = formatters.PlainTextFormatter(input_path)
     elif input_format == "jsonl":
         ingester = formatters.ProdigyFormatter(input_path)
     else:
         ingester = formatters.DocannoFormatter(input_path)
-    print("Finished ingesting data")
 
     regex_identifier = regex_identification.RegexIdentifier()
     
-    print("Identifying sensitive data")
-    for reg in ingester.registries:
+    for reg in tqdm(ingester.registries, "Sensitive data identification"):
         regex_identifier.identify_sensitive(reg)
         ner_model.identify_sensitive(reg)
-    print("Finished identifying sensitive data")
 
     if anonym_method != "none":
         print("Instantiating anonymizer")
@@ -60,14 +57,10 @@ def main():
             anonymizer = anonymize.RandomAnonym()
         else: 
             anonymizer = anonymize.AllAnonym()
-        print("Anonymizing data")
         ingester.anonymize_registries(anonymizer)
-        print("Finished anonymizing data")
 
 
-    print("Saving output")
     ingester.save(output_path)
-    print("Finished saving output")
 
 
 if __name__ == "__main__":
