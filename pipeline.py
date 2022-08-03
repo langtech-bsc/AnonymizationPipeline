@@ -6,11 +6,11 @@ import argparse
 from tqdm import tqdm
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-i", "--input", type=str, \
-        help="File containing the original text with a context per line.")
+        help="File containing the original text with a context per line.", required=True)
     parser.add_argument("-m", "--model", type=str, \
-        help="Path to the model that is going to be used", default="../models/iris_model")
+        help="Path to the model that is going to be used", default="./models/main_model")
     parser.add_argument("-t", "--type_of_model", choices=["spacy", "huggingface"], default="spacy", \
         help="The type of model that is going to be used for the NER recognition phase")
     parser.add_argument("-f", "--format", choices=["plain", "jsonl", "doccano"] , default="plain", \
