@@ -18,7 +18,7 @@ def main():
     parser.add_argument("-a", "--anonym_method", choices=["label", "random", "intelligent", "none"], default="none", \
         help="Anonymization technique that is going to be performed over the sensitive identified data")
     parser.add_argument("-o", "--output", type=str, \
-        help="File to which the save action is performed", default="output.txt")
+        help="File to which the save action is performed", default="output/output.txt")
 
     args = parser.parse_args()
     
