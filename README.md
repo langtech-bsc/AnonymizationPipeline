@@ -160,6 +160,7 @@ This technique is the safest one, since the data that is being replaced is of th
 There are 3 input formats that can be used to ingest text and perform the sensitive data identification and the anonymization phases. 
 
 In al formats the text to be treated must contain a full context in each line. If the text is multiline, the line jumps can be replaced by `\n` or each line will be treated as a separate context. 
+Examples of the plain text format and the minimal jsonl format can be found in the `example_input` directory.
 
 ### Plain text format
 Each line in the text file is a context that might contain sensitive data. Each context will be treated separately. 
