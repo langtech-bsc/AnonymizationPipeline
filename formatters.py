@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 import json
-from typing import List
+from typing import List, Optional
 from anonymize import Anonymizer, anonymizeSpans
 from meta import Span
 from tqdm import tqdm
@@ -61,7 +61,9 @@ class Registry(ABC):
         self._spans = r.spans
         self._meta = r.meta
     
-    def add_span(self, span : Span) -> None:
+    def add_span(self, span : Span, label_list : Optional[List[str]] = None) -> None:
+        if label_list and span["label"] not in label_list:
+            return # No need to add the span because it is not in the list of labels we want to keep
         # Adding the span and keeping the list sorted
         index = 0
         while index < len(self.spans):
@@ -146,7 +148,6 @@ class Formatter(ABC):
             for line in tqdm(f, "Ingesting registries", total=sum(1 for line in open(input_path, "r"))):
                 reg = self.registryFactory(line)
                 self.registries.append(reg)
-        return 
     
     def anonymize_registries(self, anonymizer : Anonymizer):
         for registry in tqdm(self.registries, "Anonymizing Registries", total=len(self.registries)):

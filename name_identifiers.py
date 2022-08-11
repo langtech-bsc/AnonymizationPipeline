@@ -1,4 +1,6 @@
 from __future__ import annotations
+from typing import List, Optional
+from meta import Span
 
 from sensitive_identifier import SensitiveIdentifier
 from formatters import Registry
@@ -8,12 +10,11 @@ import spacy
 
 
 class RoBERTaNameIdentifier(SensitiveIdentifier):
-    def __init__(self, model="BSC-TeMU/roberta-base-bne-capitel-ner-plus") -> None:
-        super().__init__()
+    def __init__(self, model="BSC-TeMU/roberta-base-bne-capitel-ner-plus", label_list : Optional[List[str]] = None) -> None:
+        super().__init__(label_list)
         self._pipe = pipeline("ner", model=model, tokenizer=model, use_auth_token=True)
 
-    def identify_sensitive(self, registry: Registry) -> None:
-        text = registry.text
+    def _get_sensitive_spans(self, text : str) -> List[Span]:
 
         ner_result = self._pipe(text)
 
@@ -21,12 +22,10 @@ class RoBERTaNameIdentifier(SensitiveIdentifier):
         
         jsonl_format = BIOConllToJsonl(sensitive_entities, text)
 
-        for match in jsonl_format:
-            registry.add_span({"start": match["span"][0], "end":match["span"][1], "label":match["tag"], "rank":3})
-
+        return [{"start": match["span"][0], "end":match["span"][1], "label":match["tag"], "rank":3} for match in jsonl_format]
+        
 
 def BIOConllToJsonl(bioEntities, original_text):
-    #TODO: Review
     entities = []
     index = 0
     while index < len(bioEntities):
@@ -48,8 +47,8 @@ def BIOConllToJsonl(bioEntities, original_text):
     return entities
 
 class SpacyIdentifier(SensitiveIdentifier):
-    def __init__(self, path_to_model : str) -> None:
-        super().__init__()
+    def __init__(self, path_to_model : str, label_list : Optional[List[str]] = None) -> None:
+        super().__init__(label_list)
         self._pipe = spacy.load(path_to_model)
     
     @property
@@ -63,9 +62,9 @@ class SpacyIdentifier(SensitiveIdentifier):
             , "LOC" : "LOC"
             }
 
-    def identify_sensitive(self, registry: Registry) -> None:
-        text = registry.text
+    def _get_sensitive_spans(self, text : str) -> List[Span]:
+        
         doc = self._pipe(text)
-        for ent in doc.ents:
-            # print(ent.text, ent.start_char, ent.end_char, ent.label_)
-            registry.add_span({"start": ent.start_char, "end": ent.end_char, "label": self.label_map[ent.label_] if ent.label_ in self.label_map else ent.label_, "rank": 0})
+        
+        return [{"start": ent.start_char, "end": ent.end_char, "label": self.label_map[ent.label_] if ent.label_ in self.label_map else ent.label_, "rank": 0} for ent in doc.ents]
+        

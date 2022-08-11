@@ -1,9 +1,17 @@
+from typing import List
 import anonymize
 import formatters
 import name_identifiers
 import regex_identification
 import argparse
 from tqdm import tqdm
+
+def get_labels(path : str) -> List[str]:
+    label_list : List[str] = []
+    with open(path, "r") as f:
+        for line in f: 
+            label_list.append(line.strip())   
+    return label_list
 
 def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -19,6 +27,8 @@ def main():
         help="Anonymization technique that is going to be performed over the sensitive identified data")
     parser.add_argument("-o", "--output", type=str, \
         help="File to which the save action is performed", default="output/output.txt")
+    parser.add_argument("-l", "--labels", type=str, \
+        help="Text file with list of labels to use by the Sensitive Recognition models")
 
     args = parser.parse_args()
     
@@ -28,12 +38,17 @@ def main():
     model_type : str = args.type_of_model
     input_format : str = args.format
     anonym_method : str = args.anonym_method
+    labels : str = args.labels
+
+    label_list = None
+    if labels:
+        label_list = get_labels(labels)
 
     print("Loading model")
     if model_type == "spacy":
-        ner_model = name_identifiers.SpacyIdentifier(model_path)
+        ner_model = name_identifiers.SpacyIdentifier(model_path, label_list)
     else:
-        ner_model = name_identifiers.RoBERTaNameIdentifier(model_path)
+        ner_model = name_identifiers.RoBERTaNameIdentifier(model_path, label_list)
     print("Finished loading model")
     
     if input_format == "plain":
@@ -43,7 +58,8 @@ def main():
     else:
         ingester = formatters.DocannoFormatter(input_path)
 
-    regex_identifier = regex_identification.RegexIdentifier()
+
+    regex_identifier = regex_identification.RegexIdentifier(label_list)
     
     for reg in tqdm(ingester.registries, "Sensitive data identification"):
         regex_identifier.identify_sensitive(reg)
