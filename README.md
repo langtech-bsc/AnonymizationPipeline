@@ -218,3 +218,15 @@ Currently we allow for 2 type of models for NER, Spacy models (which are lightwe
 Any Spacy model trained for the NER task can be used for the sensitive data detection, but those trained for identifying specific sensitive data are more suited. 
 
 To get access to a model that can be used for this purpose, please get in contact with the development team. 
+
+## Customizing Regex
+If specific regex expressions or patterns are to be recognized, one can replace the regex definition of the regex model providing a new regex definition file. 
+
+The file used for determining the regex expressions that are to be identified is located under `data/regex_definition.csv`.
+
+For example if we put the new csv file defining the regex patters under `models/regex/custom_regex.csv`, the `--regexes` argument can be used with the corresponding path to use the custom expressions instead of the default ones. 
+
+## Restricting Labels to be treated as sensitive
+Often models for NER and regex files (like the default one) contain data that we don't want to treat as sensitive. To prevent the identification (and posterior anonymization of such labels), one can use the `--labels` argument passing a simple text file with a list of labels to be treated as sensitive. 
+
+An example fo such list is provided under `example_inpu/labels/test_labels.txt`
