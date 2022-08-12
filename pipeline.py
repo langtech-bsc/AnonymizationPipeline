@@ -29,6 +29,8 @@ def main():
         help="File to which the save action is performed", default="output/output.txt")
     parser.add_argument("-l", "--labels", type=str, \
         help="Text file with list of labels to use by the Sensitive Recognition models")
+    parser.add_argument("-r", "--regexes", type=str, \
+        help="File containing regex for the regex identification in csv format", default="data/regex_definition.csv")
 
     args = parser.parse_args()
     
@@ -39,6 +41,7 @@ def main():
     input_format : str = args.format
     anonym_method : str = args.anonym_method
     labels : str = args.labels
+    regex_definitions : str = args.regexes
 
     label_list = None
     if labels:
@@ -59,7 +62,7 @@ def main():
         ingester = formatters.DocannoFormatter(input_path)
 
 
-    regex_identifier = regex_identification.RegexIdentifier(label_list)
+    regex_identifier = regex_identification.RegexIdentifier(regex_definitions, label_list)
     
     for reg in tqdm(ingester.registries, "Sensitive data identification"):
         regex_identifier.identify_sensitive(reg)
