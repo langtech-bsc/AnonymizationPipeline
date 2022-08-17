@@ -31,23 +31,6 @@ def anonymizeSpans(anonymizer : Anonymizer, spans: List[Span], text: str) -> Tup
         new_spans.append(new_span)
     return (new_spans, text)
 
-#TODO: Delete!
-# def anonymize(span: Span, text: str) -> Tuple[Span, str]:
-#     start: int = span['start']
-#     end: int = span['end']
-#     new_text: List[str] = []
-#     for char in text[start:end]:
-#         if char.isnumeric():
-#             new_text.append(random.choice(numbers))
-#         elif char.isalpha():
-#             if char.isupper():
-#                 new_text.append(random.choice(uppers))
-#             else:
-#                 new_text.append(random.choice(lowers))
-#         else:
-#             new_text.append(char)
-#     return (span.copy(), text[:start] + "".join(new_text) + text[end:])
-
 
 def _random_replace(text : str) -> str:
     new_text: List[str] = []
