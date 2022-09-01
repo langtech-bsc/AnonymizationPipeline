@@ -230,3 +230,11 @@ For example if we put the new csv file defining the regex patters under `models/
 Often models for NER and regex files (like the default one) contain data that we don't want to treat as sensitive. To prevent the identification (and posterior anonymization of such labels), one can use the `--labels` argument passing a simple text file with a list of labels to be treated as sensitive. 
 
 An example fo such list is provided under `example_inpu/labels/test_labels.txt`
+
+## Arguments with configuration files
+Arguments to the script can be passed by using configuration files. 
+The argument for passing the configuration path is `-c`. This allows for reusing the same configuration across different experiments and setups. It also helps wit organization and reproducibility (since configuration files are easier to share than command arguments). 
+
+An example of the configuration file can be found in: `example_config/`. 
+
+All arguments specified in the configuration file can be overriden by commandline arguments, thus allowing for using a base configuration and running different executions by changing the arguments in the commandline. 
