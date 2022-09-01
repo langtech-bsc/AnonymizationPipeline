@@ -3,7 +3,7 @@ import anonymize
 import formatters
 import name_identifiers
 import regex_identification
-import argparse
+import configargparse
 from tqdm import tqdm
 
 def get_labels(path : str) -> List[str]:
@@ -14,7 +14,8 @@ def get_labels(path : str) -> List[str]:
     return label_list
 
 def main():
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = configargparse.ArgumentParser(formatter_class=configargparse.ArgumentDefaultsHelpFormatter, default_config_files=['./*conf'])
+    parser.add('-c', '--config', required=False, is_config_file=True, help='config file path')
     parser.add_argument("-i", "--input", type=str, \
         help="File containing the original text with a context per line.", required=True)
     parser.add_argument("-m", "--model", type=str, \
