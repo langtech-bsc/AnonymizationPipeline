@@ -1,0 +1,5 @@
+input = input/input.txt 
+model = models/model_ca_core_lg_iris_05_31/ 
+format = plain 
+anonym_method = label 
+output = output/output.jsonl
