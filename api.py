@@ -3,6 +3,7 @@ import spacy_streamlit
 import streamlit as st
 from anonymize import AllAnonym, LabelAnonym, RandomAnonym
 from formatters import StreamIngester
+import json
 
 from name_identifiers import SpacyIdentifier
 from regex_identification import RegexIdentifier
@@ -29,7 +30,7 @@ def load_models():
     unstructured_identifier = SpacyIdentifier("./tmp/models/model_ca_core_lg_iris_05_31")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
     ingester = StreamIngester("")
-    return {"unstructured": unstructured_identifier, "regex":regex_identifier, "ingester":ingester}
+    return {"unstructured": unstructured_identifier, "regex":regex_identifier, "ingester":ingester, "anonymizers": {"Random": RandomAnonym(), "Etiqueta":LabelAnonym(), "Inteligente": AllAnonym()}}
 
 models = load_models()
 
@@ -59,10 +60,16 @@ spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels,
 if anonymize:
     st.markdown("---")
     selection = st.selectbox("Método de anonimización", options=["Random", "Etiqueta", "Inteligente"])
-    anonymizers = {"Random": RandomAnonym(), "Etiqueta":LabelAnonym(), "Inteligente": AllAnonym()}
+    anonymizers = models["anonymizers"]
     anonimyzer = anonymizers[selection]
     models["ingester"].anonymize_registries(anonimyzer)
     registry = models["ingester"].registry
     doc = [{"text": registry.text, "ents": [{"start": span["start"], "end": span["end"], "label":span["label"]} for span in registry.spans]}]
     spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second", title="Anonymización")
+    st.download_button(
+        label="Download Anonymized json"
+        , file_name="anonym.json"
+        , mime="application/json"
+        , data=json.dumps(doc[0])
+    )
 
