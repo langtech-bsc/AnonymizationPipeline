@@ -60,7 +60,7 @@ def main():
     elif input_format == "jsonl":
         ingester = formatters.ProdigyFormatter(input_path)
     else:
-        ingester = formatters.DocannoFormatter(input_path)
+        ingester = formatters.DoccanoFormatter(input_path)
 
 
     regex_identifier = regex_identification.RegexIdentifier(regex_definitions, label_list)

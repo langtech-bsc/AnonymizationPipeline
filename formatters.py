@@ -187,7 +187,7 @@ class Formatter(ABC):
                 o.write(reg.toString())
 
 class ProdigyFormatter(Formatter):
-    def __init__(self, input_file) -> None:
+    def __init__(self, input_file : str) -> None:
         super().__init__(input_file)
     
     @classmethod
@@ -208,8 +208,11 @@ class PlainTextFormatter(Formatter):
 
     
 
-class DocannoFormatter:
-    #TODO: Program
-    pass
+class DoccanoFormatter(Formatter):
+    def __init__(self, input_file :str) -> None:
+        super().__init__(input_file)
 
+    @classmethod
+    def registryFactory(cls, line: str) -> Registry:
+        return DocannoRegistry.factory(json.loads(line))
 
