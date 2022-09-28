@@ -104,6 +104,19 @@ class ProdigyRegistry(Registry):
         spans = list(map(lambda s: Span(start=s["start"],end=s["end"],label=s["label"], rank=s["rank"] if "rank" in s else 0), r["spans"]))
         return cls(r['meta']['ID'], r['text'], spans, r['meta'])
 
+class SpacyRegistry(Registry):
+    def __init__(self, index: str, text: str, spans: List[Span], meta: dict) -> None:
+        super().__init__(index, text, spans, meta)
+
+    def toString(self) -> str:
+        return json.dumps({"text": self.text, "ents": self.spans, "meta": self.meta}, ensure_ascii=False) + "\n"
+
+    @classmethod
+    def factory(cls, r: dict) -> Registry:
+        ents = list(map(lambda s: Span(start=s["start"],end=s["end"],label=s["label"], rank=s["rank"] if "rank" in s else 0), r["ents"]))
+        return cls("0", r['text'], ents, {})
+    
+
 class PlainRegistry(Registry):
     def __init__(self, index: str, text: str, spans: List[Span], meta: dict) -> None:
         super().__init__(index, text, spans, meta)
@@ -129,6 +142,19 @@ class DocannoRegistry(Registry):
     @classmethod
     def factory(cls, r: dict) -> DocannoRegistry:
         return cls(r['index'], r['text'], r['labels'], r['meta'])
+
+class StreamIngester():
+    def __init__(self, text : str) -> None:
+        self.registry : Registry = SpacyRegistry.factory({"text": text, "ents": []})
+
+    def ingest_text(self, new_text):
+        self.registry = SpacyRegistry.factory({"text": new_text, "ents": []})
+
+    def anonymize_registries(self, anonymizer : Anonymizer):
+        new_spans, new_text = anonymizeSpans(anonymizer, self.registry.spans, self.registry.text)
+        self.registry.text = new_text
+        self.registry.spans = new_spans
+
 
 class Formatter(ABC):
 
