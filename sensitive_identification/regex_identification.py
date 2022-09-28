@@ -2,10 +2,9 @@ from __future__ import annotations
 
 from typing import List, Optional, TypedDict
 from meta import Span
-from sensitive_identifier import SensitiveIdentifier
+from .sensitive_identifier import SensitiveIdentifier
 import csv
 
-from formatters import Registry
 
 # This file will contain the methods for the identification of the regular sensitive data
 

@@ -156,7 +156,7 @@ class StreamIngester():
         self.registry.spans = new_spans
 
 
-class Formatter(ABC):
+class Ingester(ABC):
 
     def __init__(self, input_file : str) -> None:
         super().__init__()
@@ -186,7 +186,7 @@ class Formatter(ABC):
             for reg in tqdm(self.registries, "Saving Registries", total=len(self.registries)):
                 o.write(reg.toString())
 
-class ProdigyFormatter(Formatter):
+class ProdigyIngester(Ingester):
     def __init__(self, input_file : str) -> None:
         super().__init__(input_file)
     
@@ -195,7 +195,7 @@ class ProdigyFormatter(Formatter):
         return ProdigyRegistry.factory(json.loads(line))
     
 
-class PlainTextFormatter(Formatter):
+class PlainTextIngester(Ingester):
     index = 0
     def __init__(self, input_file: str) -> None:
         super().__init__(input_file)
@@ -208,7 +208,7 @@ class PlainTextFormatter(Formatter):
 
     
 
-class DoccanoFormatter(Formatter):
+class DoccanoIngester(Ingester):
     def __init__(self, input_file :str) -> None:
         super().__init__(input_file)
 

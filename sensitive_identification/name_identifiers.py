@@ -2,8 +2,7 @@ from __future__ import annotations
 from typing import List, Optional
 from meta import Span
 
-from sensitive_identifier import SensitiveIdentifier
-from formatters import Registry
+from .sensitive_identifier import SensitiveIdentifier
 
 from transformers import pipeline
 import spacy

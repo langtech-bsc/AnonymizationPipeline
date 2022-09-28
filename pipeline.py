@@ -1,8 +1,8 @@
 from typing import List
 import anonymize
-import formatters
-import name_identifiers
-import regex_identification
+import ingesters
+from sensitive_identification.name_identifiers import RoBERTaNameIdentifier, SpacyIdentifier
+from sensitive_identification.regex_identification import RegexIdentifier
 import configargparse
 from tqdm import tqdm
 
@@ -50,20 +50,20 @@ def main():
 
     print("Loading model")
     if model_type == "spacy":
-        ner_model = name_identifiers.SpacyIdentifier(model_path, label_list)
+        ner_model = SpacyIdentifier(model_path, label_list)
     else:
-        ner_model = name_identifiers.RoBERTaNameIdentifier(model_path, label_list)
+        ner_model = RoBERTaNameIdentifier(model_path, label_list)
     print("Finished loading model")
     
     if input_format == "plain":
-        ingester = formatters.PlainTextFormatter(input_path)
+        ingester = ingesters.PlainTextIngester(input_path)
     elif input_format == "jsonl":
-        ingester = formatters.ProdigyFormatter(input_path)
+        ingester = ingesters.ProdigyIngester(input_path)
     else:
-        ingester = formatters.DoccanoFormatter(input_path)
+        ingester = ingesters.DoccanoIngester(input_path)
 
 
-    regex_identifier = regex_identification.RegexIdentifier(regex_definitions, label_list)
+    regex_identifier = RegexIdentifier(regex_definitions, label_list)
     
     for reg in tqdm(ingester.registries, "Sensitive data identification"):
         regex_identifier.identify_sensitive(reg)

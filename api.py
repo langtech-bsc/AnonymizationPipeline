@@ -1,12 +1,11 @@
-from unittest import case
 import spacy_streamlit
 import streamlit as st
 from anonymize import AllAnonym, LabelAnonym, RandomAnonym
-from formatters import StreamIngester
+from ingesters import StreamIngester
 import json
 
-from name_identifiers import SpacyIdentifier
-from regex_identification import RegexIdentifier
+from sensitive_identification.name_identifiers import SpacyIdentifier
+from sensitive_identification.regex_identification import RegexIdentifier
 
 labels = [
         "EMAIL",

@@ -2,7 +2,7 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
-from formatters import Registry
+from ingesters import Registry
 from meta import Span
 
 class SensitiveIdentifier(ABC):
