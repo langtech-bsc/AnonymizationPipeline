@@ -1,6 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from tokenize import String
+from typing import Iterable, List, Optional
 
 from ingesters import Registry
 from meta import Span
@@ -16,6 +17,10 @@ class SensitiveIdentifier(ABC):
         spans = self._get_sensitive_spans(text)
         for span in spans:
             registry.add_span(span, self._label_list)
+
+    @abstractmethod
+    def get_labels(self) -> Iterable[str]:
+        pass
 
     @abstractmethod
     def _get_sensitive_spans(self, text : str) -> List[Span]:

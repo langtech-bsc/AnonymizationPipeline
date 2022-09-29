@@ -3,24 +3,10 @@ import streamlit as st
 from anonymize import AllAnonym, LabelAnonym, RandomAnonym
 from ingesters import StreamIngester
 import json
+from itertools import chain
 
 from sensitive_identification.name_identifiers import SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
-
-labels = [
-        "EMAIL",
-        "FINANCIAL",
-        "ID",
-        "LOC",
-        "MISC",
-        "ORG",
-        "PER",
-        "TELEPHONE",
-        "VEHICLE",
-        "ZIP", 
-        "CARD", 
-        "LICENSE_PLATE"
-    ]
 
 st.title("Demo de Anonimizador")
 
@@ -29,14 +15,16 @@ def load_models():
     unstructured_identifier = SpacyIdentifier("./tmp/models/model_ca_core_lg_iris_05_31")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
     ingester = StreamIngester("")
-    return {"unstructured": unstructured_identifier, "regex":regex_identifier, "ingester":ingester, "anonymizers": {"Random": RandomAnonym(), "Etiqueta":LabelAnonym(), "Inteligente": AllAnonym()}}
+    labels = set(chain(unstructured_identifier.get_labels(), regex_identifier.get_labels()))
+    return {"unstructured": unstructured_identifier, "regex":regex_identifier, "ingester":ingester, "anonymizers": {"Random": RandomAnonym(), "Etiqueta":LabelAnonym(), "Inteligente": AllAnonym()}, "labels": labels}
 
 models = load_models()
+labels = models["labels"]
 
 text_input = st.text_area("Escribe el texto que deseas anonimizar")
 
 
-uploaded_file = st.file_uploader("o sube un archivo", type=["doc", "docx", "pdf", "txt"])
+uploaded_file = st.file_uploader("o sube un archivo", type=["doc", "docx", "txt"])
 
 if uploaded_file is not None:
     file_input = uploaded_file.getvalue()

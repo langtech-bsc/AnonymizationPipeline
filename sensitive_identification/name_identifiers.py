@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Optional
+from typing import Iterable, List, Optional, Set
 from meta import Span
 
 from .sensitive_identifier import SensitiveIdentifier
@@ -22,6 +22,10 @@ class RoBERTaNameIdentifier(SensitiveIdentifier):
         jsonl_format = BIOConllToJsonl(sensitive_entities, text)
 
         return [{"start": match["span"][0], "end":match["span"][1], "label":match["tag"], "rank":3} for match in jsonl_format]
+    
+    def get_labels(self) -> Iterable[str]:
+        labels : Set[str] = set([label[2:] for label in self._pipe.model.config.label2id.keys() if label != "O"])
+        return labels
         
 
 def BIOConllToJsonl(bioEntities, original_text):
@@ -66,4 +70,7 @@ class SpacyIdentifier(SensitiveIdentifier):
         doc = self._pipe(text)
         
         return [{"start": ent.start_char, "end": ent.end_char, "label": self.label_map[ent.label_] if ent.label_ in self.label_map else ent.label_, "rank": 0} for ent in doc.ents]
+
+    def get_labels(self) -> Iterable[str]:
+        return self._pipe.get_pipe("ner").labels
         

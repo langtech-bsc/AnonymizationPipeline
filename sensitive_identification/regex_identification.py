@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, TypedDict
+from typing import Iterable, List, Optional, Set, TypedDict
 from meta import Span
 from .sensitive_identifier import SensitiveIdentifier
 import csv
@@ -33,5 +33,9 @@ class RegexIdentifier(SensitiveIdentifier):
                     for match in re.finditer(reg['reg'], text)
                 ]) 
         return span_list
+    
+    def get_labels(self) -> Iterable[str]:
+        labels : Set[str] = set([pattern["label"] for pattern in self._regex_list])
+        return labels
 
 
