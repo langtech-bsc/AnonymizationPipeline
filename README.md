@@ -27,18 +27,7 @@ The anonymization pipeline is composed of the following main structures:
 Extensions are encouraged and can be done in the formatters (to ingest new types of data) and the sensitive identifiers (for extra sensitive identification methods). In both files there are abstract classes that define the interfaces both implementation need to comply with. 
 
 # Docker setup
-For a simpler deployment we include a Dockerfile that can be used to deploy the library and run the pipeline without the need of setting up a custom python environment. 
-
-
-Download model using git-lfs
-```bash 
-git lfs install && git lfs checkout && git lfs fetch && git lfs pull
-```
-Unzip model
-```bash 
-unzip model_ca_core_lg_iris_05_31.zip
-```
-
+For a simpler deployment we include a Dockerfile that can be used to deploy the library and run the pipeline without the need of setting up a custom python environment.
 
 ## Build the Docker image
 To build the image simply run the following command int he directory that contains the Dockerfile
