@@ -8,6 +8,7 @@ from itertools import chain
 from sensitive_identification.name_identifiers import SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
 
+st.set_page_config(page_title="Demo de Anonimizador")
 st.title("Demo de Anonimizador")
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
@@ -52,7 +53,7 @@ if anonymize:
     models["ingester"].anonymize_registries(anonimyzer)
     registry = models["ingester"].registry
     doc = [{"text": registry.text, "ents": [{"start": span["start"], "end": span["end"], "label":span["label"]} for span in registry.spans]}]
-    spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second", title="Anonymización")
+    spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second", title="Anonomización")
     st.download_button(
         label="Download Anonymized json"
         , file_name="anonym.json"
