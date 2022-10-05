@@ -3,6 +3,16 @@ The anonymization pipeline is a library for performing sensitive data identifica
 
 The performance of the pipeline heavily depends on the models used during the sensitive data identification process and the techniques used for anonymization reduce in different ways the re-identification probability. 
 
+## Prerequisites
+
+Make
+
+[Docker](https://docs.docker.com/engine/install/ubuntu/)
+
+[Docker compose](https://docs.docker.com/compose/install/)
+
+[Git-LFS](https://git-lfs.github.com/)
+
 # Structure of the Anonymization pipeline
 The anonymization pipeline is composed of the following main structures:
 - The runner (`pipeline.py`) which is used to run the identification, and (optional) anonymization with regular arguments in command line. 
@@ -18,6 +28,17 @@ Extensions are encouraged and can be done in the formatters (to ingest new types
 
 # Docker setup
 For a simpler deployment we include a Dockerfile that can be used to deploy the library and run the pipeline without the need of setting up a custom python environment. 
+
+
+Download model using git-lfs
+```bash 
+git lfs install && git lfs checkout && git lfs fetch && git lfs pull
+```
+Unzip model
+```bash 
+unzip model_ca_core_lg_iris_05_31.zip
+```
+
 
 ## Build the Docker image
 To build the image simply run the following command int he directory that contains the Dockerfile
@@ -58,6 +79,15 @@ The `$(pwd)` command is used to get the absolute path to the project folder and 
 The `--rm` argument for the `docker run` command is used to remove the container once the sensitive data identification and anonymization process has been performed in order to not accumulate containers and use up disk space. 
 
 **This command will invoke the `pipeline.py` script, the arguments for the pipeline are detailed in the Usage section**. 
+
+
+# Streamlit demo deployment (docker compose)
+
+To deploy the streamlit demo run
+
+```bash
+  make deploy
+```
 
 # Local Python venv setup
 If you want to run the pipeline manually (and possibly extend the code) it is better to setup a python virtual environment.

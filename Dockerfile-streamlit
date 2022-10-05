@@ -1,0 +1,20 @@
+FROM python:3.8-slim
+
+RUN mkdir /home/anonym /home/anonym/data /home/anonym/sensitive_identification
+
+COPY api.py pipeline.py anonymize.py meta.py ingesters.py min_req.txt /home/anonym/
+
+COPY models /home/anonym/models
+
+COPY sensitive_identification /home/anonym/sensitive_identification/
+
+COPY data /home/anonym/data
+
+WORKDIR /home/anonym
+
+RUN apt-get update
+
+RUN python -m pip install -r min_req.txt streamlit spacy_streamlit
+
+
+ENTRYPOINT ["streamlit", "run", "api.py", "--server.address=0.0.0.0"]

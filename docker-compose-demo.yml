@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  app:
+    container_name: demo-anonymizartion-streamlit
+    build:
+      context: .
+      dockerfile: Dockerfile-streamlit
+    restart: unless-stopped
+    ports:
+      - '8002:8501'

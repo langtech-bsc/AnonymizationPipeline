@@ -12,7 +12,7 @@ st.title("Demo de Anonimizador")
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
-    unstructured_identifier = SpacyIdentifier("./tmp/models/model_ca_core_lg_iris_05_31")
+    unstructured_identifier = SpacyIdentifier("./models/model_ca_core_lg_iris_05_31")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
     ingester = StreamIngester("")
     labels = set(chain(unstructured_identifier.get_labels(), regex_identifier.get_labels()))
