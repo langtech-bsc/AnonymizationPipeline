@@ -1,6 +1,6 @@
 from typing import List
 import anonymize
-import ingesters
+import ingestors
 from sensitive_identification.name_identifiers import RoBERTaNameIdentifier, SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
 import configargparse
@@ -56,16 +56,16 @@ def main():
     print("Finished loading model")
     
     if input_format == "plain":
-        ingester = ingesters.PlainTextIngester(input_path)
+        ingestor = ingestors.PlainTextingestor(input_path)
     elif input_format == "jsonl":
-        ingester = ingesters.ProdigyIngester(input_path)
+        ingestor = ingestors.Prodigyingestor(input_path)
     else:
-        ingester = ingesters.DoccanoIngester(input_path)
+        ingestor = ingestors.Doccanoingestor(input_path)
 
 
     regex_identifier = RegexIdentifier(regex_definitions, label_list)
     
-    for reg in tqdm(ingester.registries, "Sensitive data identification"):
+    for reg in tqdm(ingestor.registries, "Sensitive data identification"):
         regex_identifier.identify_sensitive(reg)
         ner_model.identify_sensitive(reg)
 
@@ -77,10 +77,10 @@ def main():
             anonymizer = anonymize.RandomAnonym()
         else: 
             anonymizer = anonymize.AllAnonym()
-        ingester.anonymize_registries(anonymizer)
+        ingestor.anonymize_registries(anonymizer)
 
 
-    ingester.save(output_path)
+    ingestor.save(output_path)
 
 
 if __name__ == "__main__":

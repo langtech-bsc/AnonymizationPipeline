@@ -1,7 +1,7 @@
 import spacy_streamlit
 import streamlit as st
 from anonymize import AllAnonym, LabelAnonym, RandomAnonym
-from ingesters import StreamIngester
+from ingestors import Streamingestor
 import json
 from itertools import chain
 
@@ -15,9 +15,9 @@ st.title("Demo de Anonimizador")
 def load_models():
     unstructured_identifier = SpacyIdentifier("./models/model_ca_core_lg_iris_05_31")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
-    ingester = StreamIngester("")
+    ingestor = Streamingestor("")
     labels = set(chain(unstructured_identifier.get_labels(), regex_identifier.get_labels()))
-    return {"unstructured": unstructured_identifier, "regex":regex_identifier, "ingester":ingester, "anonymizers": {"Random": RandomAnonym(), "Etiqueta":LabelAnonym(), "Inteligente": AllAnonym()}, "labels": labels}
+    return {"unstructured": unstructured_identifier, "regex":regex_identifier, "ingestor":ingestor, "anonymizers": {"Random": RandomAnonym(), "Etiqueta":LabelAnonym(), "Inteligente": AllAnonym()}, "labels": labels}
 
 models = load_models()
 labels = models["labels"]
@@ -31,13 +31,13 @@ if uploaded_file is not None:
     file_input = uploaded_file.getvalue()
     text_input = file_input.decode("utf-8")
 
-models["ingester"].ingest_text(text_input)
+models["ingestor"].ingest_text(text_input)
 
 anonymize = st.checkbox("Anonimizar")
 
 
 
-registry = models["ingester"].registry
+registry = models["ingestor"].registry
 models["unstructured"].identify_sensitive(registry)
 models["regex"].identify_sensitive(registry)
 
@@ -50,8 +50,8 @@ if anonymize:
     selection = st.selectbox("Método de anonimización", options=["Random", "Etiqueta", "Inteligente"])
     anonymizers = models["anonymizers"]
     anonimyzer = anonymizers[selection]
-    models["ingester"].anonymize_registries(anonimyzer)
-    registry = models["ingester"].registry
+    models["ingestor"].anonymize_registries(anonimyzer)
+    registry = models["ingestor"].registry
     doc = [{"text": registry.text, "ents": [{"start": span["start"], "end": span["end"], "label":span["label"]} for span in registry.spans]}]
     spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second", title="Anonomización")
     st.download_button(

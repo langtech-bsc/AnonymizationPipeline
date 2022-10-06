@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from tokenize import String
 from typing import Iterable, List, Optional
 
-from ingesters import Registry
+from ingestors import Registry
 from meta import Span
 
 class SensitiveIdentifier(ABC):

@@ -143,7 +143,7 @@ class DocannoRegistry(Registry):
     def factory(cls, r: dict) -> DocannoRegistry:
         return cls(r['index'], r['text'], r['labels'], r['meta'])
 
-class StreamIngester():
+class Streamingestor():
     def __init__(self, text : str) -> None:
         self.registry : Registry = SpacyRegistry.factory({"text": text, "ents": []})
 
@@ -156,7 +156,7 @@ class StreamIngester():
         self.registry.spans = new_spans
 
 
-class Ingester(ABC):
+class ingestor(ABC):
 
     def __init__(self, input_file : str) -> None:
         super().__init__()
@@ -186,7 +186,7 @@ class Ingester(ABC):
             for reg in tqdm(self.registries, "Saving Registries", total=len(self.registries)):
                 o.write(reg.toString())
 
-class ProdigyIngester(Ingester):
+class Prodigyingestor(ingestor):
     def __init__(self, input_file : str) -> None:
         super().__init__(input_file)
     
@@ -195,7 +195,7 @@ class ProdigyIngester(Ingester):
         return ProdigyRegistry.factory(json.loads(line))
     
 
-class PlainTextIngester(Ingester):
+class PlainTextingestor(ingestor):
     index = 0
     def __init__(self, input_file: str) -> None:
         super().__init__(input_file)
@@ -208,7 +208,7 @@ class PlainTextIngester(Ingester):
 
     
 
-class DoccanoIngester(Ingester):
+class Doccanoingestor(ingestor):
     def __init__(self, input_file :str) -> None:
         super().__init__(input_file)
 
