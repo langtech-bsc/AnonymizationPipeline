@@ -5,7 +5,6 @@ RUN mkdir /home/anonym /home/anonym/data /home/anonym/sensitive_identification
 COPY api.py pipeline.py anonymize.py meta.py ingestors.py min_req.txt /home/anonym/
 
 COPY models /home/anonym/models
-COPY .git /home/anonym/.git
 
 COPY sensitive_identification /home/anonym/sensitive_identification/
 
@@ -13,10 +12,10 @@ COPY data /home/anonym/data
 
 WORKDIR /home/anonym
 
-RUN apt-get update && apt-get install -y git git-lfs unzip
+RUN apt-get update && apt-get install -y unzip wget
 
-RUN git lfs install && git lfs checkout && git lfs fetch && git lfs pull
-RUN unzip models/model_ca_core_lg_iris_05_31.zip -d ./models && rm models/model_ca_core_lg_iris_05_31.zip
+RUN wget -O models/model_ca_core_lg_iris_31_05.zip https://www.dropbox.com/s/f9sv2s3adbffjzt/model_ca_core_lg_iris_05_31.zip\?dl\=1
+RUN unzip models/model_ca_core_lg_iris_31_05.zip -d ./models && rm models/model_ca_core_lg_iris_31_05.zip
 
 
 RUN python -m pip install -r min_req.txt streamlit spacy_streamlit
