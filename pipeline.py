@@ -6,6 +6,8 @@ from sensitive_identification.regex_identification import RegexIdentifier
 import configargparse
 from tqdm import tqdm
 
+from sensitive_identification.sensitive_identifier import SensitiveIdentifier
+
 def get_labels(path : str) -> List[str]:
     label_list : List[str] = []
     with open(path, "r") as f:
@@ -18,10 +20,10 @@ def main():
     parser.add('-c', '--config', required=False, is_config_file=True, help='config file path')
     parser.add_argument("-i", "--input", type=str, \
         help="File containing the original text with a context per line.", required=True)
-    parser.add_argument("-m", "--model", type=str, \
-        help="Path to the model that is going to be used", default="./models/main_model")
-    parser.add_argument("-t", "--type_of_model", choices=["spacy", "huggingface"], default="spacy", \
-        help="The type of model that is going to be used for the NER recognition phase")
+    parser.add_argument("-m", "--models", type=str, nargs="*", \
+        help="List of paths to the NER models", default=["./models/main_model"])
+    parser.add_argument("-t", "--type_of_models", nargs="*", choices=["spacy", "huggingface"], default=["spacy"], \
+        help="List of the type of NER models (must coincide with list of paths length)")
     parser.add_argument("-f", "--format", choices=["plain", "jsonl", "doccano"] , default="plain", \
         help="Format of the input file")
     parser.add_argument("-a", "--anonym_method", choices=["label", "random", "intelligent", "none"], default="none", \
@@ -37,22 +39,24 @@ def main():
     
     input_path : str = args.input
     output_path : str = args.output
-    model_path : str = args.model
-    model_type : str = args.type_of_model
+    model_paths : List[str] = args.models
+    model_types : List[str] = args.type_of_models
     input_format : str = args.format
     anonym_method : str = args.anonym_method
     labels : str = args.labels
     regex_definitions : str = args.regexes
 
+    assert len(model_paths) == len(model_types), "List of model paths and list of types must be of same length"
     label_list = None
     if labels:
         label_list = get_labels(labels)
-
-    print("Loading model")
-    if model_type == "spacy":
-        ner_model = SpacyIdentifier(model_path, label_list)
-    else:
-        ner_model = RoBERTaNameIdentifier(model_path, label_list)
+    ner_models : List[SensitiveIdentifier] = []
+    print("Loading models")
+    for model_path, model_type in zip(model_paths, model_types):
+        if model_type == "spacy":
+            ner_models.append(SpacyIdentifier(model_path, label_list))
+        else:
+            ner_models.append(RoBERTaNameIdentifier(model_path, label_list))
     print("Finished loading model")
     
     if input_format == "plain":
@@ -67,7 +71,8 @@ def main():
     
     for reg in tqdm(ingestor.registries, "Sensitive data identification"):
         regex_identifier.identify_sensitive(reg)
-        ner_model.identify_sensitive(reg)
+        for ner_model in ner_models:
+            ner_model.identify_sensitive(reg)
 
     if anonym_method != "none":
         print("Instantiating anonymizer")
