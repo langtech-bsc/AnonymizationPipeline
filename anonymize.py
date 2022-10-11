@@ -247,7 +247,7 @@ class AllAnonym(Anonymizer):
     @staticmethod
     def _format_string(text: str, replacement: str) -> str:
         if text[0].isupper():
-            if text[1].isupper():  # All Caps
+            if len(text) > 1 and text[1].isupper():  # All Caps
                 return replacement.upper()
             else:  # Capitalized
                 return replacement.capitalize()
