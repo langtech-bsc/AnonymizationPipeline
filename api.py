@@ -31,18 +31,21 @@ st.markdown("""### Técnicas de anonimización:
 _label_ reemplaza la información sensible con una etiqueta que identifica su clase. 
 
 > **Input**: "Hola, me llamo María Salima y vivo en Carrer de las Rosas 123. Tel: 617753689."
+
 > **Anonymized**: "Hola, me llamo \<PER\> y vivo en \<LOC\>. Tel: \<TELEPHONE\>."
 
 #### Random
 _random_ reemplaza la información sensible con una con una cadena de texto aleatoria, que preserva la ortotipografía (mayúsculas o minúscules, etc.). 
 
 > **Input**: "Hola, me llamo María Salima y vivo en Carrer de las Rosas 123. Tel: 617753689."
+
 > **Anonymized**: "Hola, me llamo Dfkwa Mjzhnt y vivo en Ujflqo vc jaa Xvzqs 682. Tel: 441573591."
 
 #### Intelligent
 _intelligent_ reemplaza la información con substituciones a partir de gazetteers correspondientes a la etiqueta del tipo detectado. 
 
 > **Input**: "Hola, me llamo María Salima y vivo en Carrer de las Rosas 123. Tel: 617753689."
+
 > **Anonymized**: "Hola, me llamo Shakira Lois y vivo en carrer de Nicaragua 94. Tel: 211608837."
 
   """)
