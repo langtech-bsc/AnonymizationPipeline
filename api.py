@@ -8,8 +8,9 @@ from itertools import chain
 from sensitive_identification.name_identifiers import SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
 
-st.set_page_config(page_title="Demo de Anonimizador")
-st.title("Demo de Anonimizador")
+st.set_page_config(page_title="Anonimización de contenidos generados por usuarios")
+st.title("Anonimización multilingüe de contenidos generados por usuarios (chatbots)")
+st.subheader("Anonimizador de contenidos generados por usuarios, para limpiar o reemplazar la información personal que puedan contener.")
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
@@ -21,6 +22,31 @@ def load_models():
 
 models = load_models()
 labels = models["labels"]
+
+st.markdown("""### Técnicas de anonimización:
+
+
+#### Label
+_label_ reemplaza la información sensible con una etiqueta que identifica su clase. 
+
+> **Input**: "Hola, me llamo María Salima y vivo en Carrer de las Rosas 123. Tel: 617753689."
+> **Anonymized**: "Hola, me llamo \<PER\> y vivo en \<LOC\>. Tel: \<TELEPHONE\>."
+
+#### Random
+_random_ reemplaza la información sensible con una con una cadena de texto aleatoria, que preserva la ortotipografía (mayúsculas o minúscules, etc.). 
+
+> **Input**: "Hola, me llamo María Salima y vivo en Carrer de las Rosas 123. Tel: 617753689."
+> **Anonymized**: "Hola, me llamo Dfkwa Mjzhnt y vivo en Ujflqo vc jaa Xvzqs 682. Tel: 441573591."
+
+#### Intelligent
+_intelligent_ reemplaza la información con substituciones a partir de gazetteers correspondientes a la etiqueta del tipo detectado. 
+
+> **Input**: "Hola, me llamo María Salima y vivo en Carrer de las Rosas 123. Tel: 617753689."
+> **Anonymized**: "Hola, me llamo Shakira Lois y vivo en carrer de Nicaragua 94. Tel: 211608837."
+
+  """)
+
+st.markdown('###Información detallada en el [README.md](https://raw.githubusercontent.com/TeMU-BSC/AnonymizationPipeline/main/README.md)')
 
 text_input = st.text_area("Escribe el texto que deseas anonimizar")
 
