@@ -9,8 +9,9 @@ from sensitive_identification.name_identifiers import SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
 
 st.set_page_config(page_title="Anonimización de contenidos generados por usuarios")
-st.title("Anonimización multilingüe de contenidos generados por usuarios (chatbots)")
-st.subheader("Anonimizador de contenidos generados por usuarios, para limpiar o reemplazar la información personal que puedan contener.")
+st.title("Demo de Anonimización Multilingüe")
+#st.header("Anonimización multilingüe de contenidos generados por usuarios")
+st.subheader("Anonimizador para castellano y catalán de contenidos generados por usuarios en sistemas conversacionales, para limpiar o reemplazar la información personal que puedan contener. Se utilizan gramáticas y modelos neuronales.")
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
@@ -46,7 +47,8 @@ _intelligent_ reemplaza la información con substituciones a partir de gazetteer
 
   """)
 
-st.markdown('###Información detallada en el [README.md](https://raw.githubusercontent.com/TeMU-BSC/AnonymizationPipeline/main/README.md)')
+st.markdown('### Información detallada y código en el [repo GitHub](https://github.com/TeMU-BSC/AnonymizationPipeline)')
+st.markdown('### Imagen Docker en el  [Docker Hub](https://hub.docker.com/repository/docker/bsctemu/anonymization-pipeline/)')
 
 text_input = st.text_area("Escribe el texto que deseas anonimizar")
 
