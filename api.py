@@ -84,7 +84,7 @@ if anonymize:
     models["ingestor"].anonymize_registries(anonimyzer)
     registry = models["ingestor"].registry
     doc = [{"text": registry.text, "ents": [{"start": span["start"], "end": span["end"], "label":span["label"]} for span in registry.spans]}]
-    spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second", title="Anonomización")
+    spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second", title="Anonimización")
     st.download_button(
         label="Download Anonymized json"
         , file_name="anonym.json"
