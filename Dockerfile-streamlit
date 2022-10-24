@@ -14,11 +14,11 @@ WORKDIR /home/anonym
 
 RUN apt-get update && apt-get install -y unzip wget
 
-RUN wget -O models/model_ca_core_lg_iris_31_05.zip https://www.dropbox.com/s/f9sv2s3adbffjzt/model_ca_core_lg_iris_05_31.zip\?dl\=1
-RUN unzip models/model_ca_core_lg_iris_31_05.zip -d ./models && rm models/model_ca_core_lg_iris_31_05.zip
+RUN wget -O models/main_model.zip https://www.dropbox.com/s/f9sv2s3adbffjzt/model_ca_core_lg_iris_05_31.zip\?dl\=1
+RUN unzip models/main_model.zip -d ./models && rm models/main_model.zip
 
 
 RUN python -m pip install -r min_req.txt streamlit spacy_streamlit
 
 
-ENTRYPOINT ["streamlit", "run", "api.py", "--server.address=0.0.0.0"]
+ENTRYPOINT ["streamlit", "run", "api.py", "--server.address=0.0.0.0", "--server.port=8501"]

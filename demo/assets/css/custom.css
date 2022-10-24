@@ -1,0 +1,76 @@
+.css-9s5bis {
+     display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    font-weight: 400;
+    border-radius: 0.25rem;
+    margin: 0px 0.125rem;
+    color: inherit;
+    width: auto;
+    user-select: none;
+    background-color: transparent;
+    border: none;
+    padding: 0.5rem;
+    font-size: 14px;
+    line-height: 1;
+}
+
+.css-18ni7ap {
+    height: 3.875rem !important;
+    background: #136b82 !important;
+}
+
+.css-14xtw13 {
+    height: 3.875rem !important;
+}
+
+.css-2o1js2, .css-n2eizo, .css-os4thw, header {
+    color: white !important;
+}
+
+.css-1afq4ht {
+    fill: white !important;
+}
+.css-1j15ncu {
+    filter: brightness(0) invert(1) !important;
+}
+
+.footer-custom-images {
+    padding-bottom: 4em !important;
+    display: flex;
+    place-content: center;
+    align-content: center;
+    flex-flow: row wrap;
+    box-sizing: border-box;
+}
+
+.footer-custom-images img:hover {
+     filter: unset;
+}
+
+.footer-custom-images img {
+     max-height: 6em !important;
+     margin: 0.5rem 0 !important;
+     filter: grayscale(100%);
+    width: auto;
+}
+
+@media (max-width: 410px) {
+  .demo-title {
+    display: none;
+  }
+}
+
+.footer-custom-images a {
+     margin-right: 3em !important;
+}
+
+.css-18e3th9 {
+    padding-bottom: 4rem;
+    padding-top: 4rem;
+}
+iframe, .css-1dp5vir {
+    display: none;
+}

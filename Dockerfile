@@ -4,6 +4,8 @@ RUN mkdir /home/anonym /home/anonym/data /home/anonym/sensitive_identification
 
 COPY pipeline.py anonymize.py meta.py ingestors.py min_req.txt /home/anonym/
 
+COPY models /home/anonym/models
+
 COPY sensitive_identification /home/anonym/sensitive_identification/
 
 COPY data /home/anonym/data
