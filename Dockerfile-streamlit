@@ -2,7 +2,7 @@ FROM python:3.9-slim
 
 RUN mkdir /home/anonym /home/anonym/data /home/anonym/sensitive_identification
 
-COPY api.py pipeline.py anonymize.py meta.py ingestors.py min_req.txt /home/anonym/
+COPY api.py demo_utils.py pipeline.py anonymize.py meta.py ingestors.py min_req.txt /home/anonym/
 
 COPY models /home/anonym/models
 
