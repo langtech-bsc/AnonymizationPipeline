@@ -5,17 +5,25 @@ from ingestors import Streamingestor
 import json
 from itertools import chain
 
+import demo_utils as utl
 from sensitive_identification.name_identifiers import SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
 
-st.set_page_config(page_title="Anonimización de contenidos generados por usuarios")
+st.set_page_config(page_title="Anonimización de contenidos generados por usuarios", layout="wide")
 st.title("Demo de Anonimización Multilingüe")
+
+
+utl.inject_custom_images()
+utl.inject_custom_html()
+utl.inject_custom_css()
+utl.inject_custom_js()
+
 #st.header("Anonimización multilingüe de contenidos generados por usuarios")
 st.markdown("Anonimizador para castellano y catalán de contenidos generados por usuarios en sistemas conversacionales, para limpiar o reemplazar la información personal que puedan contener. Se utilizan gramáticas y modelos neuronales.")
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
-    unstructured_identifier = SpacyIdentifier("./models/model_ca_core_lg_iris_05_31")
+    unstructured_identifier = SpacyIdentifier("./models/main_model")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
     ingestor = Streamingestor("")
     labels = set(chain(unstructured_identifier.get_labels(), regex_identifier.get_labels()))
