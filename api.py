@@ -1,43 +1,25 @@
-import shutil
-from pathlib import Path
-
 import spacy_streamlit
 import streamlit as st
-
 from anonymize import AllAnonym, LabelAnonym, RandomAnonym
 from ingestors import Streamingestor
 import json
 from itertools import chain
-import demo_utils as utl
 
 from sensitive_identification.name_identifiers import SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
 
-# st.set_page_config(page_title="Anonimización de contenidos generados por usuarios")
-st.set_page_config(page_title="Anonimización de contenidos generados por usuarios", layout="wide")
-
-utl.inject_custom_images()
-utl.inject_custom_html()
-utl.inject_custom_css()
-utl.inject_custom_js()
-
+st.set_page_config(page_title="Anonimización de contenidos generados por usuarios")
 st.title("Demo de Anonimización Multilingüe")
-# st.header("Anonimización multilingüe de contenidos generados por usuarios")
-
-st.markdown(
-    "Anonimizador para castellano y catalán de contenidos generados por usuarios en sistemas conversacionales, para limpiar o reemplazar la información personal que puedan contener. Se utilizan gramáticas y modelos neuronales.")
-
+#st.header("Anonimización multilingüe de contenidos generados por usuarios")
+st.markdown("Anonimizador para castellano y catalán de contenidos generados por usuarios en sistemas conversacionales, para limpiar o reemplazar la información personal que puedan contener. Se utilizan gramáticas y modelos neuronales.")
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
-    unstructured_identifier = SpacyIdentifier("models/main_model")
+    unstructured_identifier = SpacyIdentifier("./models/model_ca_core_lg_iris_05_31")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
     ingestor = Streamingestor("")
     labels = set(chain(unstructured_identifier.get_labels(), regex_identifier.get_labels()))
-    return {"unstructured": unstructured_identifier, "regex": regex_identifier, "ingestor": ingestor,
-            "anonymizers": {"Random": RandomAnonym(), "Etiqueta": LabelAnonym(), "Inteligente": AllAnonym()},
-            "labels": labels}
-
+    return {"unstructured": unstructured_identifier, "regex":regex_identifier, "ingestor":ingestor, "anonymizers": {"Random": RandomAnonym(), "Etiqueta":LabelAnonym(), "Inteligente": AllAnonym()}, "labels": labels}
 
 models = load_models()
 labels = models["labels"]
@@ -73,6 +55,7 @@ st.markdown('### Imagen Docker en el  [Docker Hub](https://hub.docker.com/r/bsct
 
 text_input = st.text_area("Escribe el texto que deseas anonimizar")
 
+
 uploaded_file = st.file_uploader("o sube un archivo", type=["doc", "docx", "txt"])
 
 if uploaded_file is not None:
@@ -83,12 +66,13 @@ models["ingestor"].ingest_text(text_input)
 
 anonymize = st.checkbox("Anonimizar")
 
+
+
 registry = models["ingestor"].registry
 models["unstructured"].identify_sensitive(registry)
 models["regex"].identify_sensitive(registry)
 
-doc = [{"text": registry.text,
-        "ents": [{"start": span["start"], "end": span["end"], "label": span["label"]} for span in registry.spans]}]
+doc = [{"text": registry.text, "ents": [{"start": span["start"], "end": span["end"], "label":span["label"]} for span in registry.spans]}]
 
 spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, title="Identificación de datos")
 
@@ -99,13 +83,12 @@ if anonymize:
     anonimyzer = anonymizers[selection]
     models["ingestor"].anonymize_registries(anonimyzer)
     registry = models["ingestor"].registry
-    doc = [{"text": registry.text,
-            "ents": [{"start": span["start"], "end": span["end"], "label": span["label"]} for span in registry.spans]}]
-    spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second",
-                                  title="Anonomización")
+    doc = [{"text": registry.text, "ents": [{"start": span["start"], "end": span["end"], "label":span["label"]} for span in registry.spans]}]
+    spacy_streamlit.visualize_ner(doc, manual=True, show_table=False, labels=labels, key="second", title="Anonimización")
     st.download_button(
         label="Download Anonymized json"
         , file_name="anonym.json"
         , mime="application/json"
         , data=json.dumps(doc[0])
     )
+
