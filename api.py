@@ -23,7 +23,7 @@ st.markdown("Anonimizador para castellano y catalán de contenidos generados por
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
-    unstructured_identifier = SpacyIdentifier("./models/main_model")
+    unstructured_identifier = SpacyIdentifier("./models/model_ca_core_lg_iris_05_31")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
     ingestor = Streamingestor("")
     labels = set(chain(unstructured_identifier.get_labels(), regex_identifier.get_labels()))

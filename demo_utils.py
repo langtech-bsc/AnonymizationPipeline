@@ -1,7 +1,6 @@
 import shutil
 from pathlib import Path
 import streamlit as st
-import base64
 from streamlit.components.v1 import html
 
 
