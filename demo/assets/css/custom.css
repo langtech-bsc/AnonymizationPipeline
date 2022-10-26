@@ -58,10 +58,13 @@
 }
 
 @media (max-width: 410px) {
-  .demo-title {
-    display: none;
-  }
+    div[data-testid="stStatusWidget"] {
+        visibility: hidden;
+        height: 0;
+        position: fixed;
+    }
 }
+
 
 .footer-custom-images a {
      margin-right: 3em !important;

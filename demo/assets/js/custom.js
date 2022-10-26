@@ -1,3 +1,4 @@
+//navbar logo and source icons (docker, github) html
 const navBarTitleHtml = `<div class="css-14xtw13 e8zbici0" style="
             right: unset !important;
         "><span kind="header" class="css-9s5bis edgvbvh3 demo-title" style="
@@ -11,6 +12,7 @@ const navBarTitleHtml = `<div class="css-14xtw13 e8zbici0" style="
     <i style="color: #fff;" class="fa-brands fa-docker fa-xl"></i>
 </a></span>`
 
+//footer custom images html
 const footerHtml = `<div class="footer-custom-images"">      
                     <a target="_blank" title="Barcelona Supercomputing Center" href="https://www.bsc.es"><img alt="BSC logo" src="/assets/custom-images/BSC-blue-small.png"></a>
                     <a target="_blank" title="Plan de Impulso de las Tecnologías del Lenguaje" href="https://plantl.mineco.gob.es/Paginas/index.aspx"><img alt="Plan TL logo" src="./assets/custom-images/plantl.png"></a>
