@@ -2,7 +2,7 @@ FROM python:3.9-slim
 
 RUN mkdir /home/anonym /home/anonym/data /home/anonym/sensitive_identification
 
-COPY api.py demo_utils.py pipeline.py anonymize.py meta.py ingestors.py min_req.txt /home/anonym/
+COPY demo.py demo_utils.py pipeline.py anonymize.py meta.py ingestors.py min_req.txt /home/anonym/
 
 COPY models /home/anonym/models
 COPY .streamlit /home/anonym/.streamlit
@@ -14,13 +14,13 @@ COPY data /home/anonym/data
 
 WORKDIR /home/anonym
 
-RUN apt-get update && apt-get install -y unzip wget
+RUN apt-get update && apt-get install -y unzip wget git
 
 RUN wget -O models/main_model.zip https://www.dropbox.com/s/f9sv2s3adbffjzt/model_ca_core_lg_iris_05_31.zip\?dl\=1
 RUN unzip -o models/main_model.zip -d ./models && rm models/main_model.zip
 
 
-RUN python -m pip install -r min_req.txt streamlit spacy_streamlit
+RUN python -m pip install -r min_req.txt streamlit
 
 
-ENTRYPOINT ["streamlit", "run", "api.py", "--server.address=0.0.0.0", "--server.port=8501"]
+ENTRYPOINT ["streamlit", "run", "demo.py", "--server.address=0.0.0.0", "--server.port=8501"]

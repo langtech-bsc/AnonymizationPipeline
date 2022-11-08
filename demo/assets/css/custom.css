@@ -50,15 +50,22 @@
      filter: unset;
 }
 
-.footer-custom-images img {
-     max-height: 6em !important;
-     margin: 0.5rem 0 !important;
-     filter: grayscale(100%);
-    width: auto;
+.bsc-logo {
+    max-height: 5em !important;
 }
 
-@media (max-width: 410px) {
-    div[data-testid="stStatusWidget"] {
+.footer-custom-images img {
+     max-height: 6em;
+     margin: 0.5rem 0 !important;
+     width: auto;
+}
+
+.footer-custom-images a {
+     margin-right: 3em !important;
+}
+
+@media (max-width: 580px) {
+      div[data-testid="stStatusWidget"] {
         visibility: hidden;
         height: 0;
         position: fixed;
@@ -66,9 +73,17 @@
 }
 
 
-.footer-custom-images a {
-     margin-right: 3em !important;
+@media (max-width: 410px) {
+
+    .demo-header-left {
+        left: 0;
+    }
+    .demo-logo{
+        display: none;
+    }
+
 }
+
 
 .css-18e3th9 {
     padding-bottom: 4rem;
@@ -76,4 +91,8 @@
 }
 iframe, .css-1dp5vir {
     display: none;
+}
+
+.css-1b47r0y {
+    float: right !important;
 }
