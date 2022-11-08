@@ -134,7 +134,7 @@ with c2:
 
     # if anonymize:
     st.download_button(
-        label="Download Anonymized json"
+        label="Descargar salida anonimizada (JSON)"
         , file_name="anonym.json"
         , mime="application/json"
         , data=json.dumps(doc[0])

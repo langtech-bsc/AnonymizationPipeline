@@ -84,6 +84,11 @@
 
 }
 
+@media (max-width: 320px) {
+    .demo-title{
+        display: none;
+    }
+}
 
 .css-18e3th9 {
     padding-bottom: 4rem;
@@ -93,6 +98,8 @@ iframe, .css-1dp5vir {
     display: none;
 }
 
-.css-1b47r0y {
+
+
+.stDownloadButton button {
     float: right !important;
 }
