@@ -257,3 +257,7 @@ The argument for passing the configuration path is `-c`. This allows for reusing
 An example of the configuration file can be found in: `example_config/`. 
 
 All arguments specified in the configuration file can be overriden by commandline arguments, thus allowing for using a base configuration and running different executions by changing the arguments in the commandline. 
+
+## License
+
+This project is licensed under the Apache License, Version 2.0. (https://www.apache.org/licenses/LICENSE-2.0)
