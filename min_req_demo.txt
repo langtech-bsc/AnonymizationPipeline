@@ -1,0 +1,2 @@
+git+https://github.com/TeMU-BSC/spacy-streamlit.git
+https://github.com/TeMU-BSC/streamlit/releases/download/1.14.1/streamlit-1.14.1-py2.py3-none-any.whl

@@ -1,8 +1,11 @@
 FROM python:3.9-slim
 
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 RUN mkdir /home/anonym /home/anonym/data /home/anonym/sensitive_identification
 
-COPY demo.py demo_utils.py pipeline.py anonymize.py meta.py ingestors.py min_req.txt /home/anonym/
+COPY demo.py pipeline.py anonymize.py meta.py ingestors.py min_req.txt min_req_demo.txt /home/anonym/
 
 COPY models /home/anonym/models
 COPY .streamlit /home/anonym/.streamlit
@@ -20,7 +23,7 @@ RUN wget -O models/main_model.zip https://www.dropbox.com/s/f9sv2s3adbffjzt/mode
 RUN unzip -o models/main_model.zip -d ./models && rm models/main_model.zip
 
 
-RUN python -m pip install -r min_req.txt streamlit
-
+RUN python -m pip install -r min_req.txt
+RUN python -m pip install -r min_req_demo.txt
 
 ENTRYPOINT ["streamlit", "run", "demo.py", "--server.address=0.0.0.0", "--server.port=8501"]

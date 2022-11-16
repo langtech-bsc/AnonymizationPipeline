@@ -4,28 +4,35 @@ from anonymize import AllAnonym, LabelAnonym, RandomAnonym
 from ingestors import Streamingestor
 import json
 from itertools import chain
-from PIL import Image
 
-import demo_utils as utl
 from sensitive_identification.name_identifiers import SpacyIdentifier
 from sensitive_identification.regex_identification import RegexIdentifier
 
-st.set_page_config(page_title="Anonimización de contenidos generados por usuarios", layout="wide", menu_items={
+st.set_page_config(page_title="Anonimización de contenidos generados por usuarios", header_title="Anonimizador bilingüe", layout="wide", menu_items={
     'Get Help': 'https://huggingface.co/PlanTL-GOB-ES',
     'Report a bug': 'https://github.com/TeMU-BSC/AnonymizationPipeline/issues',
     'About': 'Demostrador de anonimización de textos bilingüs castellano/catalán entrenado para entornos de participación ciudadana. Para acceder a otros demostradores del PlanTL [ver aqui](https://plantl.bsc.es)'
 
-}, page_icon=Image.open('demo/assets/images/favicon.png'))
+}, social_icons=[
+            {
+                "url": "https://github.com/TeMU-BSC/AnonymizationPipeline",
+                "title": "Github",
+                "classes": "fa-brands fa-github fa-xl",
+                "color": "#fff",
+            },
+            {
+                "url": "https://hub.docker.com/r/bsctemu/anonymization-pipeline",
+                "title": "Docker Hub",
+                "classes": "fa-brands fa-docker fa-xl",
+                "color": "#fff",
+            }
+        ])
 
-utl.inject_custom_images()
-utl.inject_custom_html()
-utl.inject_custom_css()
-utl.inject_custom_js()
+
 
 labels_colors = {"ID": "#fff1e6", "LOC": "#eae4e9", "EMAIL": "#bee1e6", "LICENSE_PLATE": "#fde2e4", "ORG": "#dfe7fd",
                  "PER": "#bee1e6", "MISC": "#f0efeb", "FINANCIAL": "#caffbf", "VEHICLE": "#fad2e1", "CARD": "#ffadad",
                  "ZIP": "#fdffb6", "TELEPHONE": "#cddafd"}
-
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
@@ -43,9 +50,6 @@ labels = models["labels"]
 
 c30, c31, c32 = st.columns([2.5, 1, 3])
 
-# with c30:
-#     # st.image("logo.png", width=400)
-#     st.markdown("### Anonimizador bilingüe")
 
 with st.expander("ℹ️ - Acerca del anonimizador", expanded=False):
     st.write(
@@ -88,7 +92,6 @@ with c1:
 
                 > **Anonimizado**: "Hola, me llamo Dfkwa Mjzhnt y vivo en Ujflqo vc jaa Xvzqs 682. Tel: 441573591."
                 """)
-    # selection = st.selectbox("Método de anonimización", options=["Random", "Etiqueta", "Inteligente"])
 
 with c2:
     st.markdown("##### Entrada de datos")
@@ -104,6 +107,8 @@ with c2:
     doc = [{"text": registry.text,
             "ents": [{"start": span["start"], "end": span["end"], "label": span["label"]} for span in
                      registry.spans]}]
+
+    st.button("Anonimizar")
 
     spacy_streamlit.visualize_ner(doc, colors=labels_colors, manual=True,
                                   show_table=False, labels=labels,
@@ -132,7 +137,6 @@ with c2:
                                   expander_text="Selecciona las etiquetas de  entidades",
                                   entity_labels_text="Etiquetas de entidades")
 
-    # if anonymize:
     st.download_button(
         label="Descargar salida anonimizada (JSON)"
         , file_name="anonym.json"
