@@ -8,3 +8,5 @@ services:
     restart: unless-stopped
     ports:
       - '8002:8501'
+    environment:
+      - LANG=es

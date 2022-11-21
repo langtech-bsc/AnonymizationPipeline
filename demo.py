@@ -112,9 +112,7 @@ with c2:
 
     spacy_streamlit.visualize_ner(doc, colors=labels_colors, manual=True,
                                   show_table=False, labels=labels,
-                                  expander_open=False, title_markdown="##### Identificación de datos",
-                                  expander_text="Selecciona las etiquetas de  entidades",
-                                  entity_labels_text="Etiquetas de entidades")
+                                  expander_open=False, title="Identificación de datos")
 
     # uploaded_file = st.file_uploader("o sube un archivo", type=["doc", "docx", "txt"])
 
@@ -133,9 +131,7 @@ with c2:
                      registry.spans]}]
     spacy_streamlit.visualize_ner(doc, colors=labels_colors, manual=True,
                                   show_table=False, labels=labels, key="second",
-                                  expander_open=False, title_markdown="##### Anonimización",
-                                  expander_text="Selecciona las etiquetas de  entidades",
-                                  entity_labels_text="Etiquetas de entidades")
+                                  expander_open=False)
 
     st.download_button(
         label="Descargar salida anonimizada (JSON)"
