@@ -1,6 +1,6 @@
-input = input/input.txt 
-models = [models/model_ca_core_lg_iris_05_31/]
-type_of_models = [spacy]
+input = example_input/plain_text/frases.txt
+models = [models/model_ca_core_lg_iris_05_31/,models/xx_ent_wiki_sm-3.4.0/xx_ent_wiki_sm/xx_ent_wiki_sm-3.4.0/]
+type_of_models = [spacy,spacy]
 format = plain 
 anonym_method = label 
 output = output/output.jsonl

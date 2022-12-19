@@ -30,7 +30,7 @@ Extensions are encouraged and can be done in the formatters (to ingest new types
 For a simpler deployment we include a Dockerfile that can be used to deploy the library and run the pipeline without the need of setting up a custom python environment.
 
 ## Build the Docker image
-To build the image simply run the following command int he directory that contains the Dockerfile
+To build the image simply run the following command in the directory that contains the Dockerfile
 ```bash
 docker build --tag anonymization .
 ```
@@ -110,7 +110,7 @@ All commands here use the `pipeline.py` but the arguments are the same for the D
 
 To display the help of the arguments:
 ``` bash
-pipeline.py --help
+python pipeline.py --help
 ```
 Which will display something like: 
 ```
@@ -134,7 +134,7 @@ optional arguments:
 
 Example:
 ```bash
-pipeline.py -i input/input_file_1.txt -m models/model_1 -f plain -a intelligent -o output/output_test.jsonl
+python pipeline.py -i example_input/plain_text/frases.txt -m models/model_ca_core_lg_iris_05_31 models/xx_ent_wiki_sm-3.4.0/xx_ent_wiki_sm/xx_ent_wiki_sm-3.4.0/ -f plain -a intelligent -o output/output_test.jsonl -t spacy spacy
 ```
 
 The details about the functioning of each argument and the formats of the input and output files are detailed below. 
@@ -248,7 +248,7 @@ For example if we put the new csv file defining the regex patters under `models/
 ## Restricting Labels to be treated as sensitive
 Often models for NER and regex files (like the default one) contain data that we don't want to treat as sensitive. To prevent the identification (and posterior anonymization of such labels), one can use the `--labels` argument passing a simple text file with a list of labels to be treated as sensitive. 
 
-An example fo such list is provided under `example_inpu/labels/test_labels.txt`
+An example fo such list is provided under `example_input/labels/test_labels.txt`
 
 ## Arguments with configuration files
 Arguments to the script can be passed by using configuration files. 
