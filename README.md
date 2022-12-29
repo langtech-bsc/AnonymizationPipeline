@@ -236,7 +236,13 @@ Currently we allow for 2 type of models for NER, Spacy models (which are lightwe
 
 Any Spacy model trained for the NER task can be used for the sensitive data detection, but those trained for identifying specific sensitive data are more suited. 
 
-To get access to a model that can be used for this purpose, please get in contact with the development team. 
+Models available for download and install at:
+
+- https://huggingface.co/PlanTL-GOB-ES/ca_model_ca_core_lg_iris_05_31
+
+- https://huggingface.co/spacy/xx_ent_wiki_sm
+
+Install them under the models/ directory or reference them if installing on envs via pip.
 
 ## Customizing Regex
 If specific regex expressions or patterns are to be recognized, one can replace the regex definition of the regex model providing a new regex definition file. 
