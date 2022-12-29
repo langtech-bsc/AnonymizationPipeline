@@ -134,7 +134,7 @@ optional arguments:
 
 Example:
 ```bash
-python pipeline.py -i example_input/plain_text/frases.txt -m models/ca_model_ca_core_lg_iris_05_31 models/xx_ent_wiki_sm -f plain -a intelligent -o output/output_test.jsonl -t spacy spacy
+python pipeline.py -i example_input/plain_text/frases.txt -m models/ca_anonimization_core_lg models/xx_ent_wiki_sm -f plain -a intelligent -o output/output_test.jsonl -t spacy spacy
 ```
 
 The details about the functioning of each argument and the formats of the input and output files are detailed below. 
@@ -238,7 +238,7 @@ Any Spacy model trained for the NER task can be used for the sensitive data dete
 
 Models available for download and install at:
 
-- https://huggingface.co/PlanTL-GOB-ES/ca_model_ca_core_lg_iris_05_31
+- https://huggingface.co/PlanTL-GOB-ES/ca_anonimization_core_lg
 
 - https://huggingface.co/spacy/xx_ent_wiki_sm
 
