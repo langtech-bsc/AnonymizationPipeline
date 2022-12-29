@@ -134,7 +134,7 @@ optional arguments:
 
 Example:
 ```bash
-python pipeline.py -i example_input/plain_text/frases.txt -m models/model_ca_core_lg_iris_05_31 models/xx_ent_wiki_sm-3.4.0/xx_ent_wiki_sm/xx_ent_wiki_sm-3.4.0/ -f plain -a intelligent -o output/output_test.jsonl -t spacy spacy
+python pipeline.py -i example_input/plain_text/frases.txt -m models/ca_model_ca_core_lg_iris_05_31 models/xx_ent_wiki_sm -f plain -a intelligent -o output/output_test.jsonl -t spacy spacy
 ```
 
 The details about the functioning of each argument and the formats of the input and output files are detailed below. 
@@ -242,7 +242,7 @@ Models available for download and install at:
 
 - https://huggingface.co/spacy/xx_ent_wiki_sm
 
-Install them under the models/ directory or reference them if installing on envs via pip.
+Clone them under the models/ directory or reference them if installing on envs via pip.
 
 ## Customizing Regex
 If specific regex expressions or patterns are to be recognized, one can replace the regex definition of the regex model providing a new regex definition file. 
