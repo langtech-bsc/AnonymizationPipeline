@@ -57,13 +57,23 @@ project_folder
 ```
 
 With the previous structure for our anonymization process we can run the container with the following command from the project directory:
+
+**NOTE:** The es_anonimization_core_lg and xx_ent_wiki_sm models are already included in the docker image and will run by default.
+```bash
+docker run --rm \                                                                                                                                                                                                               1 ↵
+	-v $(pwd)/example_input:/home/anonym/example_input \
+	-v $(pwd)/output:/home/anonym/output \
+	anonymization -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl
+```
+To run the pipeline with custom models, you have to mount the docker volume that contains the models directory.
 ```bash
 docker run --rm \
 	-v $(pwd)/input:/home/anonym/input \
 	-v $(pwd)/models:/home/anonym/models \
 	-v $(pwd)/output:/home/anonym/output \
-	anonymization [ARGS]
+	anonymization -m models/my_custom_model -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl
 ```
+
 The `$(pwd)` command is used to get the absolute path to the project folder and prevent path problems. 
 The `--rm` argument for the `docker run` command is used to remove the container once the sensitive data identification and anonymization process has been performed in order to not accumulate containers and use up disk space. 
 

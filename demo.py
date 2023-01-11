@@ -36,7 +36,7 @@ labels_colors = {"ID": "#fff1e6", "LOC": "#eae4e9", "EMAIL": "#bee1e6", "LICENSE
 
 @st.cache(show_spinner=False, allow_output_mutation=True, suppress_st_warning=True)
 def load_models():
-    unstructured_identifier = SpacyIdentifier("./models/model_ca_core_lg_iris_05_31")
+    unstructured_identifier = SpacyIdentifier("es_anonimization_core_lg")
     regex_identifier = RegexIdentifier("data/regex_definition.csv")
     ingestor = Streamingestor("")
     labels = set(chain(unstructured_identifier.get_labels(), regex_identifier.get_labels()))
