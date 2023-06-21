@@ -91,7 +91,7 @@ To deploy the streamlit demo run
 # Local Python venv setup
 If you want to run the pipeline manually (and possibly extend the code) it is better to setup a python virtual environment.
 
-Check the python version, if you have python installed (python 3.7 onwards is encouraged) you can do so with: 
+Check the python version, if you have python installed (python 3.8 onwards is encouraged) you can do so with: 
 ```bash
 python --version
 ```
