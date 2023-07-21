@@ -16,11 +16,17 @@ class RoBERTaNameIdentifier(SensitiveIdentifier):
     def _get_sensitive_spans(self, text : str) -> List[Span]:
 
         ner_result = self._pipe(text)
-
         sensitive_entities = [e for e in ner_result if ('PER' in e['entity'] or 'LOC' in e['entity'])]
-        
-        jsonl_format = BIOConllToJsonl(sensitive_entities, text)
+        # we define a sensitive entity as information that fully allows identification of an individual
+        # i.e. any full name, or complete location (i.e. a full address)
 
+        jsonl_format = BIOConllToJsonl(sensitive_entities, text)
+        json_persons = [e for e in jsonl_format if e['tag'] == 'PER' and len(e['text'].split()) > 1]
+        json_locations = [e for e in jsonl_format if e['tag'] == 'LOC']
+
+        print(text)
+        jsonl_format = json_persons + json_locations
+        print(jsonl_format)
         return [{"start": match["span"][0], "end":match["span"][1], "label":match["tag"], "rank":3} for match in jsonl_format]
     
     def get_labels(self) -> Iterable[str]:
@@ -31,18 +37,23 @@ class RoBERTaNameIdentifier(SensitiveIdentifier):
 def BIOConllToJsonl(bioEntities, original_text):
     entities = []
     index = 0
+    punct = [' ', ',', '.', '!', '?', '\"', "'"]
     while index < len(bioEntities):
         tag = bioEntities[index]['entity']
         start = bioEntities[index]['start']
         end = bioEntities[index]['end']
-
         if tag[0] == 'B' :
             while(index + 1 < len(bioEntities) and (bioEntities[index + 1]['entity'] == tag) and bioEntities[index + 1]['start'] == (end)):
                 end = bioEntities[index + 1]['end']
                 index +=1
+                while end < len(original_text) and original_text[end] not in punct:
+                    end += 1
         while(index + 1 < len(bioEntities) and (bioEntities[index + 1]['entity'][0] in ['I', 'E'])):
             end = bioEntities[index + 1]['end']
             index +=1
+            while end < len(original_text) and original_text[end] not in punct:
+                end += 1
+        print(original_text[start:end])
         text = original_text[start:end]
         entities.append({'tag': tag[2:], 'span':(start, end), 'text': text})
         index += 1
