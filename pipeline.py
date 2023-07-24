@@ -7,7 +7,7 @@ import configargparse
 from tqdm import tqdm
 
 from sensitive_identification.sensitive_identifier import SensitiveIdentifier
-from truecaser.Truecaser import Truecaser
+from truecaser.TrueCaser import TrueCaser
 
 tc = TrueCaser('truecaser/spanish.dist')
 
