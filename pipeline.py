@@ -7,6 +7,9 @@ import configargparse
 from tqdm import tqdm
 
 from sensitive_identification.sensitive_identifier import SensitiveIdentifier
+from truecaser.Truecaser import Truecaser
+
+tc = TrueCaser('truecaser/spanish.dist')
 
 def get_labels(path : str) -> List[str]:
     label_list : List[str] = []
@@ -70,6 +73,7 @@ def main():
     regex_identifier = RegexIdentifier(regex_definitions, label_list)
     
     for reg in tqdm(ingestor.registries, "Sensitive data identification"):
+        reg.text = tc.get_true_case(reg.text)
         regex_identifier.identify_sensitive(reg)
         for ner_model in ner_models:
             ner_model.identify_sensitive(reg)

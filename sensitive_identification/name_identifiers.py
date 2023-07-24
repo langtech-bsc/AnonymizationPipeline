@@ -23,10 +23,7 @@ class RoBERTaNameIdentifier(SensitiveIdentifier):
         jsonl_format = BIOConllToJsonl(sensitive_entities, text)
         json_persons = [e for e in jsonl_format if e['tag'] == 'PER' and len(e['text'].split()) > 1]
         json_locations = [e for e in jsonl_format if e['tag'] == 'LOC']
-
-        print(text)
         jsonl_format = json_persons + json_locations
-        print(jsonl_format)
         return [{"start": match["span"][0], "end":match["span"][1], "label":match["tag"], "rank":3} for match in jsonl_format]
     
     def get_labels(self) -> Iterable[str]:
@@ -53,7 +50,6 @@ def BIOConllToJsonl(bioEntities, original_text):
             index +=1
             while end < len(original_text) and original_text[end] not in punct:
                 end += 1
-        print(original_text[start:end])
         text = original_text[start:end]
         entities.append({'tag': tag[2:], 'span':(start, end), 'text': text})
         index += 1
