@@ -39,17 +39,16 @@ def BIOConllToJsonl(bioEntities, original_text):
         tag = bioEntities[index]['entity']
         start = bioEntities[index]['start']
         end = bioEntities[index]['end']
-        if tag[0] == 'B' :
+        if tag[0] in ['B', 'S']:
             while(index + 1 < len(bioEntities) and (bioEntities[index + 1]['entity'] == tag) and bioEntities[index + 1]['start'] == (end)):
                 end = bioEntities[index + 1]['end']
                 index +=1
-                while end < len(original_text) and original_text[end] not in punct:
-                    end += 1
+
         while(index + 1 < len(bioEntities) and (bioEntities[index + 1]['entity'][0] in ['I', 'E'])):
             end = bioEntities[index + 1]['end']
             index +=1
-            while end < len(original_text) and original_text[end] not in punct:
-                end += 1
+        while end < len(original_text) and original_text[end] not in punct:
+            end += 1
         text = original_text[start:end]
         entities.append({'tag': tag[2:], 'span':(start, end), 'text': text})
         index += 1

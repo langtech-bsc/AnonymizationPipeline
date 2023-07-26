@@ -5,6 +5,7 @@ from sensitive_identification.name_identifiers import RoBERTaNameIdentifier, Spa
 from sensitive_identification.regex_identification import RegexIdentifier
 import configargparse
 from tqdm import tqdm
+from copy import deepcopy
 
 from sensitive_identification.sensitive_identifier import SensitiveIdentifier
 from truecaser.TrueCaser import TrueCaser
@@ -73,10 +74,12 @@ def main():
     regex_identifier = RegexIdentifier(regex_definitions, label_list)
     
     for reg in tqdm(ingestor.registries, "Sensitive data identification"):
+        original_reg = deepcopy(reg)
         reg.text = tc.get_true_case(reg.text)
         regex_identifier.identify_sensitive(reg)
         for ner_model in ner_models:
             ner_model.identify_sensitive(reg)
+        reg.text = original_reg.text
 
     if anonym_method != "none":
         print("Instantiating anonymizer")
@@ -87,7 +90,6 @@ def main():
         else: 
             anonymizer = anonymize.AllAnonym()
         ingestor.anonymize_registries(anonymizer)
-
 
     ingestor.save(output_path)
 

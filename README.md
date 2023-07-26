@@ -13,6 +13,7 @@ Make
 
 [Git-LFS](https://git-lfs.github.com/)
 
+
 # Structure of the Anonymization pipeline
 The anonymization pipeline is composed of the following main structures:
 - The runner (`pipeline.py`) which is used to run the identification, and (optional) anonymization with regular arguments in command line. 
@@ -58,7 +59,23 @@ project_folder
 
 With the previous structure for our anonymization process we can run the container with the following command from the project directory:
 
-**NOTE:** The es_anonimization_core_lg and xx_ent_wiki_sm models are already included in the docker image and will run by default.
+**NOTE:** The es_anonimization_core_lg and xx_ent_wiki_sm models are already included in the docker image and will run by default. However, due to file size and practical limitations, the newly trained roberta model 
+and the truecaser model must be downloaded from the appropriate source and placed in the proper directories as indicated below.
+
+```
+project_folder
+	|- input/
+		|- input_file_1
+		|- input_file_2
+		|- ...
+	|- models/
+		|- roberte-base-bne-iris-capitel-ner
+		|- ...
+	|- truecaser
+		|-spanish.dist
+		|-TrueCaser.py
+	|- output/
+```
 ```bash
 docker run --rm \                                                                                                                                                                                                               1 ↵
 	-v $(pwd)/example_input:/home/anonym/example_input \
