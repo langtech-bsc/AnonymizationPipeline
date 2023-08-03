@@ -58,6 +58,12 @@ project_folder
 ```
 
 With the previous structure for our anonymization process we can run the container with the following command from the project directory:
+```bash
+docker run --rm \                                                                                                                                                                                                               1 ↵
+	-v $(pwd)/example_input:/home/anonym/example_input \
+	-v $(pwd)/output:/home/anonym/output \
+	anonymization -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl
+```
 
 **NOTE:** The es_anonimization_core_lg and xx_ent_wiki_sm models are already included in the docker image and will run by default. However, due to file size and practical limitations, the newly trained roberta model 
 and the truecaser model must be downloaded from the appropriate source and placed in the proper directories as indicated below.
@@ -76,12 +82,7 @@ project_folder
 		|-TrueCaser.py
 	|- output/
 ```
-```bash
-docker run --rm \                                                                                                                                                                                                               1 ↵
-	-v $(pwd)/example_input:/home/anonym/example_input \
-	-v $(pwd)/output:/home/anonym/output \
-	anonymization -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl
-```
+
 To run the pipeline with custom models, you have to mount the docker volume that contains the models directory.
 ```bash
 docker run --rm \
@@ -267,9 +268,19 @@ Models available for download and install at:
 
 - https://huggingface.co/PlanTL-GOB-ES/ca_anonimization_core_lg
 
+- https://huggingface.co/BSC-LT/roberta_model_for_anonimization
+
 - https://huggingface.co/spacy/xx_ent_wiki_sm
 
 Clone them under the models/ directory or reference them if installing on envs via pip.
+
+## Truecasing
+
+Additionally, we include a truecaser model after having found that it yields more robust model performance. The spanish.dist model can be downloaded here:
+
+https://huggingface.co/HURIDOCS/spanish-truecasing/tree/main
+
+and should be place in the truecasing/ directory.
 
 ## Customizing Regex
 If specific regex expressions or patterns are to be recognized, one can replace the regex definition of the regex model providing a new regex definition file. 

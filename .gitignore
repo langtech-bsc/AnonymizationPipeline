@@ -130,5 +130,4 @@ dmypy.json
 
 # Pycharm IDE
 .idea
-/models/
 /truecaser/spanish.dist
