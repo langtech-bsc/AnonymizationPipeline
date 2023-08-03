@@ -280,7 +280,7 @@ Additionally, we include a truecaser model after having found that it yields mor
 
 https://huggingface.co/HURIDOCS/spanish-truecasing/tree/main
 
-and should be place in the truecasing/ directory.
+and should be placed in the truecasing/ directory.
 
 ## Customizing Regex
 If specific regex expressions or patterns are to be recognized, one can replace the regex definition of the regex model providing a new regex definition file. 
