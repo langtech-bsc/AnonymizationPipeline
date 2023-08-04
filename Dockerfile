@@ -19,7 +19,7 @@ COPY pipeline.py anonymize.py meta.py ingestors.py /home/anonym/
 
 COPY models /home/anonym/models
 
-COPY truecaser /home/anonym/truecaser/
+COPY truecaser /home/anonym/truecaser
 
 COPY sensitive_identification /home/anonym/sensitive_identification/
 

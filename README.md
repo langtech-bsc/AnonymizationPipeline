@@ -89,7 +89,7 @@ docker run --rm \
 	-v $(pwd)/input:/home/anonym/input \
 	-v $(pwd)/models:/home/anonym/models \
 	-v $(pwd)/output:/home/anonym/output \
-	anonymization -m models/my_custom_model -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl
+	anonymization -m models/my_custom_model -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl -t model_type
 ```
 
 The `$(pwd)` command is used to get the absolute path to the project folder and prevent path problems. 
