@@ -62,6 +62,7 @@ With the previous structure for our anonymization process we can run the contain
 docker run --rm \                                                                                                                                                                                                               1 ↵
 	-v $(pwd)/example_input:/home/anonym/example_input \
 	-v $(pwd)/output:/home/anonym/output \
+	-v $(pwd)/truecaser:/home/anonym/truecaser \
 	anonymization -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl
 ```
 
@@ -86,9 +87,10 @@ project_folder
 To run the pipeline with custom models, you have to mount the docker volume that contains the models directory.
 ```bash
 docker run --rm \
-	-v $(pwd)/input:/home/anonym/input \
+	-v $(pwd)/example_input:/home/anonym/input \
 	-v $(pwd)/models:/home/anonym/models \
 	-v $(pwd)/output:/home/anonym/output \
+	-v $(pwd)/truecaser:/home/anonym/truecaser \
 	anonymization -m models/my_custom_model -i example_input/plain_text/frases.txt -f plain -a intelligent -o output/output_test.jsonl -t model_type
 ```
 
