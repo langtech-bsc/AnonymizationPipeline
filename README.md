@@ -76,7 +76,7 @@ project_folder
 		|- input_file_2
 		|- ...
 	|- models/
-		|- roberte-base-bne-iris-capitel-ner
+		|- roberta-model-for-anonymization
 		|- ...
 	|- truecaser
 		|-spanish.dist
