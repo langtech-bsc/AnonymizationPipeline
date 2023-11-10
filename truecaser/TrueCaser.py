@@ -68,10 +68,10 @@ class TrueCaser(object):
             trigram_score = numerator / denominator
 
         result = (
-            math.log(unigram_score)
-            + math.log(bigram_backward_score)
-            + math.log(bigram_forward_score)
-            + math.log(trigram_score)
+                math.log(unigram_score)
+                + math.log(bigram_backward_score)
+                + math.log(bigram_forward_score)
+                + math.log(trigram_score)
         )
 
         return result
@@ -85,9 +85,12 @@ class TrueCaser(object):
         return '. ' + match.group(0)[-1].upper()
 
     def get_true_case(self, sentence, out_of_vocabulary_token_option="title"):
-        tokens = word_tokenize(sentence)
+        # word tokenizer is set for English. Defaulting to whitespace split
+        # tokens = word_tokenize(sentence)
+        tokens = sentence.split()
         tokens_true_case = self.get_true_case_from_tokens(tokens, out_of_vocabulary_token_option)
-        text = self.detknzr.detokenize(tokens_true_case)
+        # text = self.detknzr.detokenize(tokens_true_case)
+        text = ' '.join(tokens_true_case)
         text = re.sub(r' \. .', self.upper_replacement, text)
         return text
 
@@ -135,4 +138,3 @@ class TrueCaser(object):
 
         tokens_true_case[0] = self.first_token_case(tokens_true_case[0])
         return tokens_true_case
-

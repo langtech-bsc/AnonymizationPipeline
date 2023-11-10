@@ -15,7 +15,7 @@ class RoBERTaNameIdentifier(SensitiveIdentifier):
 
     def _get_sensitive_spans(self, text : str) -> List[Span]:
 
-        ner_result = self._pipe(text)
+        ner_result = self._pipe(text.strip())
         sensitive_entities = [e for e in ner_result if ('PER' in e['entity'] or 'LOC' in e['entity'])]
         # we define a sensitive entity as information that fully allows identification of an individual
         # i.e. any full name, or complete location (i.e. a full address)
@@ -24,7 +24,7 @@ class RoBERTaNameIdentifier(SensitiveIdentifier):
         json_persons = [e for e in jsonl_format if e['tag'] == 'PER' and len(e['text'].split()) > 1]
         json_locations = [e for e in jsonl_format if e['tag'] == 'LOC']
         jsonl_format = json_persons + json_locations
-        return [{"start": match["span"][0], "end":match["span"][1], "label":match["tag"], "rank":3} for match in jsonl_format]
+        return [{"start": match["span"][0], "end":match["span"][1], "label":match["tag"], "rank":2} for match in jsonl_format]
     
     def get_labels(self) -> Iterable[str]:
         labels : Set[str] = set([label[2:] for label in self._pipe.model.config.label2id.keys() if label != "O"])

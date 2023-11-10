@@ -31,7 +31,7 @@ class RegexIdentifier(SensitiveIdentifier):
             span_list.extend(
                 [{'start': match.span()[0], 'end': match.span()[1], 'label': reg['label'], 'rank' : reg['rank'] } 
                     for match in re.finditer(reg['reg'], text)
-                ]) 
+                ])
         return span_list
     
     def get_labels(self) -> Iterable[str]:
